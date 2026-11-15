@@ -101,7 +101,11 @@
   "g_fireplace": "Камин с гаргульями и пауком",
   "g_chess": "Шахматная доска со светящимися кнопками",
   "g_shields": "Стена-головоломка с рыцарскими щитами",
-  "g_cubes": "Три куба с символами"
+  "g_cubes": "Три куба с символами",
+  "g_store": "Витрина и лобби Exit Game",
+  "g_books": "Полка с кожаными книгами и тайными знаками",
+  "g_sliders": "Головоломка с головами зверей",
+  "g_maze": "Сундук с лабиринтом в библиотеке"
  },
  "he": {
   "title": "ExitCube — חדרי בריחה ניידים לימי הולדת",
@@ -205,7 +209,11 @@
   "g_fireplace": "אח עם גרגוילים ועכביש",
   "g_chess": "לוח שחמט עם כפתורים מוארים",
   "g_shields": "קיר חידה עם מגיני אבירים",
-  "g_cubes": "שלוש קוביות עם סמלים"
+  "g_cubes": "שלוש קוביות עם סמלים",
+  "g_store": "חלון הראווה והלובי של Exit Game",
+  "g_books": "מדף ספרי עור עם סימנים סודיים",
+  "g_sliders": "חידת ראשי החיות",
+  "g_maze": "תיבה עם מבוך בספרייה"
  },
  "en": {
   "title": "ExitCube — mobile escape games for birthdays",
@@ -309,6 +317,10 @@
   "g_fireplace": "Fireplace with gargoyles and a spider",
   "g_chess": "Chessboard with glowing buttons",
   "g_shields": "Puzzle wall with knight shields",
-  "g_cubes": "Three cubes with symbols"
+  "g_cubes": "Three cubes with symbols",
+  "g_store": "Exit Game storefront and lobby",
+  "g_books": "Shelf of leather books with secret signs",
+  "g_sliders": "Animal-head slider puzzle",
+  "g_maze": "Maze chest in the library"
  }
 }
