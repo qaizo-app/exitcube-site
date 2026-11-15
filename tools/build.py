@@ -17,6 +17,8 @@ HOME = {"he": "/", "ru": "/ru/", "en": "/en/"}
 LOCALE = {"he": "he_IL", "ru": "ru_RU", "en": "en_US"}
 FONT = {"he": "rubik-hebrew-wght-normal.woff2", "ru": "rubik-cyrillic-wght-normal.woff2", "en": "rubik-latin-wght-normal.woff2"}
 UPDATED = "15.11.2026"
+_TA = "/Attraction_Review-g1137841-d7751597-Reviews-ExitGame_Israel_LTD-Ashdod_Southern_District.html"
+TRIPADVISOR = {"he": "https://www.tripadvisor.co.il" + _TA, "ru": "https://www.tripadvisor.ru" + _TA, "en": "https://www.tripadvisor.com" + _TA}
 
 T = json.loads((ROOT / "src/strings.json").read_text(encoding="utf8"))
 SITE = json.loads((ROOT / "src/site.json").read_text(encoding="utf8"))
@@ -178,6 +180,7 @@ def build_landing(lang):
         "desc": html.escape(d["desc"], quote=True), "url": BASE + HOME[lang], "alternates": alternates(""),
         "locale": LOCALE[lang], "font": FONT[lang], "home": HOME[lang],
         "jsonld": json.dumps(jsonld, ensure_ascii=False), "L": json.dumps(L, ensure_ascii=False),
+        "ta_url": TRIPADVISOR[lang],
         "wa": SITE["whatsapp"], "tel": SITE["tel"], "phone": SITE["phone_display"],
         "alt_hero": html.escape(ALT[lang]["hero"], quote=True), "alt_m1": html.escape(ALT[lang]["m1"], quote=True),
         "alt_m2": html.escape(ALT[lang]["m2"], quote=True), "alt_m3": html.escape(ALT[lang]["m3"], quote=True),

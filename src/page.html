@@ -136,6 +136,9 @@ nav a:hover{color:#fff}
 .story{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center}
 .story h2{font-size:clamp(30px,4.6vw,48px);margin-block:14px 18px}
 .story p{color:#c9d0cb}
+.ta{display:inline-flex;align-items:center;gap:14px;margin-top:24px;padding:12px 20px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);text-decoration:none;font-size:16px;color:#c9d0cb;transition:border-color .15s}
+.ta:hover{border-color:var(--neon)}
+.ta b{font-size:32px;font-weight:800;line-height:1;color:var(--neon)}
 .rooms{margin-top:26px}
 .rooms span{display:block;font-size:16px;color:var(--dim);margin-bottom:10px}
 .rooms ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
@@ -293,6 +296,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <span class="kicker" data-i18n="st_k"></span>
         <h2 data-i18n="st_t"></h2>
         <p data-i18n="st_p"></p>
+        <a class="ta" href="{{ta_url}}" target="_blank" rel="noopener"><b>4.8</b><span data-i18n="ta"></span></a>
         <div class="rooms">
           <span data-i18n="rooms"></span>
           <ul><li data-i18n="r1"></li><li data-i18n="r2"></li><li data-i18n="r3"></li><li data-i18n="r4"></li><li data-i18n="r5"></li><li data-i18n="r6"></li></ul>
