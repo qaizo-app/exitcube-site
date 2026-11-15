@@ -1,6 +1,15 @@
 {
-  // ExitCube static site, served by Cloudflare Workers static assets
+  // ExitCube: static site in ./public plus a small Worker for the waitlist form.
   "name": "exitcube-site",
+  "main": "worker/index.js",
   "compatibility_date": "2026-11-01",
-  "assets": { "directory": "./public" }
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // Only /api/* goes to the Worker; every page and file is served directly.
+    "run_worker_first": ["/api/*"]
+  },
+  // No database_id on purpose: Cloudflare creates the database on first deploy
+  // and keeps it linked. Tables are created by the Worker itself.
+  "d1_databases": [{ "binding": "DB", "database_name": "exitcube" }]
 }

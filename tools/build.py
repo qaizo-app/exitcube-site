@@ -34,30 +34,30 @@ LEGAL = {
     "privacy": {
         "he": ("מדיניות פרטיות", [
             ("מי אנחנו", "ExitCube מפעילה חדרי בריחה ניידים לימי הולדת, מאשדוד. לכל שאלה בנושא פרטיות אפשר לפנות אלינו בטלפון או בוואטסאפ: {phone}."),
-            ("איזה מידע נאסף", "האתר אינו דורש הרשמה ואינו שומר אצלנו את מה שמקלידים בטופס. הטופס רק מכין הודעת וואטסאפ במכשיר שלכם. המידע מגיע אלינו רק אם בחרתם לשלוח את ההודעה, ואז אנחנו רואים את מה שכתבתם ואת מספר הטלפון שלכם."),
+            ("איזה מידע נאסף", "האתר אינו דורש הרשמה. כשאתם שולחים את הטופס, אנחנו שומרים את מה שמילאתם: שם, טלפון, עיר, מספר הילדים, גילם והמשימה שמעניינת אתכם. הטופס נשלח רק לאחר שסימנתם את האישור. אם תשלחו גם את הודעת הוואטסאפ, נראה אותה ואת מספר הטלפון שלכם."),
             ("למה אנחנו משתמשים במידע", "כדי לחזור אליכם בנוגע להשקה ולהזמנות. איננו מוכרים ואיננו מעבירים את הפרטים לגורמים אחרים."),
             ("עוגיות ומעקב", "האתר אינו משתמש בעוגיות פרסום או מעקב."),
-            ("אחסון האתר", "האתר מתארח אצל Cloudflare, ששומרת נתונים טכניים (כמו כתובת IP) לצורכי אבטחה ותפעול."),
+            ("איפה המידע נשמר", "האתר ומאגר הפניות מתארחים אצל Cloudflare, ששומרת גם נתונים טכניים (כמו כתובת IP) לצורכי אבטחה ותפעול. הודעה על כל פנייה חדשה נשלחת אלינו בטלגרם."),
             ("ילדים", "האתר מיועד להורים. איננו אוספים ביודעין מידע מילדים."),
             ("הזכויות שלכם", "אפשר לבקש לעיין במידע שנמצא אצלנו, לתקן אותו או למחוק אותו. פנו אלינו ונטפל בבקשה."),
             ("עדכונים", "ייתכן שנעדכן מדיניות זו מעת לעת. עדכון אחרון: {date}."),
         ]),
         "ru": ("Политика конфиденциальности", [
             ("Кто мы", "ExitCube проводит мобильные квесты на дни рождения, мы работаем из Ашдода. По вопросам конфиденциальности пишите или звоните: {phone}."),
-            ("Какие данные собираются", "Сайт не требует регистрации и не сохраняет у нас то, что вы вводите в форму. Форма только готовит сообщение WhatsApp на вашем устройстве. Данные попадают к нам, только если вы сами отправили сообщение: тогда мы видим его текст и ваш номер телефона."),
+            ("Какие данные собираются", "Сайт не требует регистрации. Когда вы отправляете форму, мы сохраняем то, что вы в ней указали: имя, телефон, город, число детей, их возраст и интересующую миссию. Форма отправляется только после того, как вы отметили согласие. Если вы отправите ещё и сообщение в WhatsApp, мы увидим его текст и ваш номер."),
             ("Зачем нам эти данные", "Чтобы ответить вам о запуске и бронировании. Мы не продаём и не передаём ваши данные третьим лицам."),
             ("Cookie и отслеживание", "Сайт не использует рекламные и отслеживающие cookie."),
-            ("Хостинг", "Сайт размещён в Cloudflare, который хранит технические данные (например, IP-адрес) для безопасности и работы сервиса."),
+            ("Где хранятся данные", "Сайт и база заявок размещены в Cloudflare, который хранит также технические данные (например, IP-адрес) для безопасности и работы сервиса. Уведомление о каждой новой заявке приходит нам в Telegram."),
             ("Дети", "Сайт предназначен для родителей. Мы сознательно не собираем данные детей."),
             ("Ваши права", "Вы можете попросить показать, исправить или удалить данные, которые есть у нас. Напишите нам, и мы это сделаем."),
             ("Изменения", "Мы можем время от времени обновлять эту политику. Последнее обновление: {date}."),
         ]),
         "en": ("Privacy policy", [
             ("Who we are", "ExitCube runs mobile escape games for birthday parties, based in Ashdod, Israel. For privacy questions, call or message us: {phone}."),
-            ("What is collected", "The site needs no sign-up and does not store what you type into the form. The form only prepares a WhatsApp message on your device. We receive it only if you choose to send it, and then we see what you wrote and your phone number."),
+            ("What is collected", "The site needs no sign-up. When you send the form, we store what you entered: name, phone, city, number of kids, their age and the mission you are interested in. The form is sent only after you tick the consent box. If you also send the WhatsApp message, we see its text and your phone number."),
             ("How we use it", "To reply to you about the launch and bookings. We do not sell or pass your details to anyone else."),
             ("Cookies and tracking", "The site uses no advertising or tracking cookies."),
-            ("Hosting", "The site is hosted by Cloudflare, which keeps technical data (such as IP addresses) for security and operations."),
+            ("Where it is kept", "The site and the list of requests are hosted by Cloudflare, which also keeps technical data (such as IP addresses) for security and operations. A notice about each new request reaches us on Telegram."),
             ("Children", "The site is meant for parents. We do not knowingly collect information from children."),
             ("Your rights", "You can ask to see, correct or delete the information we hold. Contact us and we will handle it."),
             ("Changes", "We may update this policy from time to time. Last updated: {date}."),
@@ -174,7 +174,8 @@ def build_landing(lang):
         "areaServed": {"@type": "City", "name": "Ashdod"},
         "availableLanguage": ["he", "ru", "en"], "foundingDate": "2015",
     }
-    L = {"msg": d["msg"], "age_mix": d["age_mix"],
+    L = {"msg": d["msg"], "age_mix": d["age_mix"], "err_phone": d["err_phone"], "err_consent": d["err_consent"],
+         "saved": d["saved"], "save_fail": d["save_fail"],
          "msn": {"any": d["o_any"], "trex": d["m1_t"], "space": d["m2_t"], "magic": d["m3_t"]}}
     vals = {
         "lang": lang, "dir": "rtl" if lang == "he" else "ltr", "title": html.escape(d["title"]),

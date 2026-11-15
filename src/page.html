@@ -96,6 +96,13 @@ nav a:hover{color:#fff}
 .hero .sub{font-size:clamp(18px,2vw,21px);color:#e2e7e3;max-width:36em;text-shadow:0 1px 14px rgba(0,0,0,.6)}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 
+@media (max-width:900px){
+  .hero{display:block;min-height:0}
+  .hero picture{position:relative;display:block;aspect-ratio:4/3}
+  .hero img{object-position:82% 50%}
+  .hero .shade{bottom:auto;aspect-ratio:4/3;background:linear-gradient(180deg,rgba(10,12,11,.65) 0,transparent 26%,transparent 62%,var(--bg) 100%)}
+  .hero .inner{padding-block:6px 44px}
+}
 /* facts */
 .facts{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--line)}
 .facts div{padding:26px 8px;text-align:center;border-inline-start:1px solid var(--line)}
@@ -179,6 +186,14 @@ details p{color:var(--dim);padding-bottom:20px;max-width:42em}
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23a3aca6' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - 16px) 50%;padding-inline-end:40px}
 [dir="rtl"] .field select{background-position:16px 50%}
 .field input:focus,.field select:focus{border-color:var(--volt);outline:none;box-shadow:0 0 0 3px rgba(255,212,0,.16)}
+.consent{display:flex;gap:12px;align-items:flex-start;font-size:16px;color:var(--dim);cursor:pointer}
+.consent input{flex:none;width:22px;height:22px;margin:2px 0 0;accent-color:var(--volt)}
+.consent a{color:var(--ink)}
+.field input.bad{border-color:#ff8a70}
+.fstatus{margin-top:14px;font-size:16px;min-height:1.6em}
+.fstatus.ok{color:var(--neon)}
+.fstatus.err{color:#ff8a70}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .side{padding:clamp(26px,4vw,44px);background:var(--panel-2);border-inline-start:1px solid var(--line);display:flex;flex-direction:column;gap:10px;justify-content:center}
 .side span{font-size:16px;color:var(--dim)}
 .phone{font-size:26px;font-weight:800;direction:ltr;unicode-bidi:isolate;text-align:start;text-decoration:none;font-variant-numeric:tabular-nums}
@@ -356,15 +371,19 @@ footer span{direction:ltr;unicode-bidi:isolate}
       <p data-i18n="b_s"></p>
     </div>
     <div class="book rv">
-      <form class="form" id="form">
+      <form class="form" id="form" novalidate>
         <div class="field"><label for="f-name" data-i18n="f_name"></label><input id="f-name" autocomplete="name"></div>
+        <div class="field"><label for="f-phone" data-i18n="f_phone"></label><input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required></div>
         <div class="field"><label for="f-city" data-i18n="f_city"></label><input id="f-city" autocomplete="address-level2"></div>
         <div class="field"><label for="f-kids" data-i18n="f_kids"></label><input id="f-kids" type="number" min="1" max="30" inputmode="numeric"></div>
         <div class="field"><label for="f-age" data-i18n="f_age"></label>
           <select id="f-age"><option value="7–9">7–9</option><option value="10–13">10–13</option><option value="mix" data-i18n="age_mix"></option></select></div>
-        <div class="field full"><label for="f-msn" data-i18n="f_msn"></label>
+        <div class="field"><label for="f-msn" data-i18n="f_msn"></label>
           <select id="f-msn"><option value="any" data-i18n="o_any"></option><option value="trex" data-i18n="m1_t"></option><option value="space" data-i18n="m2_t"></option><option value="magic" data-i18n="m3_t"></option></select></div>
-        <div class="full"><a class="btn" id="send" href="https://wa.me/{{wa}}" target="_blank" rel="noopener" data-i18n="send"></a></div>
+        <input class="hp" id="f-web" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="consent full"><input id="f-ok" type="checkbox"><span data-i18n="consent"></span></label>
+        <div class="full"><a class="btn" id="send" href="https://wa.me/{{wa}}" target="_blank" rel="noopener" data-i18n="send"></a>
+          <p class="fstatus" id="fstatus" role="status" aria-live="polite"></p></div>
       </form>
       <div class="side">
         <span data-i18n="call"></span>
@@ -399,6 +418,20 @@ $("#form").addEventListener("input",buildLink);
 $("#form").addEventListener("change",buildLink);
 $("#form").addEventListener("submit",e=>e.preventDefault());
 document.querySelectorAll("[data-pick]").forEach(a=>a.addEventListener("click",()=>{$("#f-msn").value=a.dataset.pick;buildLink();}));
+
+// Save the request on our side first, so it is not lost if the visitor never
+// presses "send" inside WhatsApp. The link itself still opens WhatsApp.
+const status=(text,cls)=>{const el=$("#fstatus");el.textContent=text;el.className="fstatus"+(cls?" "+cls:"");};
+$("#f-phone").addEventListener("input",()=>$("#f-phone").classList.remove("bad"));
+$("#send").addEventListener("click",e=>{
+  const phone=$("#f-phone").value.trim(),digits=phone.replace(/\D/g,"");
+  if(digits.length<9||digits.length>15){e.preventDefault();$("#f-phone").classList.add("bad");$("#f-phone").focus();status(L.err_phone,"err");return;}
+  if(!$("#f-ok").checked){e.preventDefault();$("#f-ok").focus();status(L.err_consent,"err");return;}
+  const body=JSON.stringify({name:$("#f-name").value,phone,city:$("#f-city").value,kids:$("#f-kids").value,age:$("#f-age").value,mission:$("#f-msn").value,lang:document.documentElement.lang,consent:true,website:$("#f-web").value});
+  fetch("/api/lead",{method:"POST",headers:{"content-type":"application/json"},body,keepalive:true})
+    .then(r=>r.ok?status(L.saved,"ok"):status(L.save_fail,"err"))
+    .catch(()=>status(L.save_fail,"err"));
+});
 buildLink();
 
 // header turns solid once the hero image scrolls away

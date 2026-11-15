@@ -72,7 +72,7 @@
   "a6": "Иврит, русский или английский. Язык выбираете перед игрой.",
   "b_k": "Заявка",
   "b_t": "Узнайте о запуске первыми",
-  "b_s": "Заполните пару полей, и откроется WhatsApp с готовым сообщением.",
+  "b_s": "Оставьте телефон: мы сохраним заявку и откроем WhatsApp с готовым сообщением.",
   "f_name": "Имя родителя",
   "f_city": "Город",
   "f_kids": "Сколько детей",
@@ -105,7 +105,13 @@
   "g_store": "Витрина и лобби Exit Game",
   "g_books": "Полка с кожаными книгами и тайными знаками",
   "g_sliders": "Головоломка с головами зверей",
-  "g_maze": "Сундук с лабиринтом в библиотеке"
+  "g_maze": "Сундук с лабиринтом в библиотеке",
+  "f_phone": "Телефон",
+  "consent": "Согласен(на) получить сообщение о запуске ExitCube. <a href=\"{{home}}privacy/\">Конфиденциальность</a>",
+  "err_phone": "Укажите телефон, чтобы мы могли вам написать.",
+  "err_consent": "Отметьте согласие, без него мы не сможем вам написать.",
+  "saved": "Заявка сохранена. Мы напишем вам о запуске.",
+  "save_fail": "Не удалось сохранить заявку. Отправьте сообщение в WhatsApp, и мы его получим."
  },
  "he": {
   "title": "ExitCube — חדרי בריחה ניידים לימי הולדת",
@@ -180,7 +186,7 @@
   "a6": "עברית, רוסית או אנגלית. בוחרים שפה לפני המשחק.",
   "b_k": "השארת פרטים",
   "b_t": "היו הראשונים לדעת על ההשקה",
-  "b_s": "ממלאים כמה פרטים, ווואטסאפ נפתח עם הודעה מוכנה.",
+  "b_s": "השאירו טלפון: נשמור את הפרטים ונפתח וואטסאפ עם הודעה מוכנה.",
   "f_name": "שם ההורה",
   "f_city": "עיר",
   "f_kids": "מספר ילדים",
@@ -213,7 +219,13 @@
   "g_store": "חלון הראווה והלובי של Exit Game",
   "g_books": "מדף ספרי עור עם סימנים סודיים",
   "g_sliders": "חידת ראשי החיות",
-  "g_maze": "תיבה עם מבוך בספרייה"
+  "g_maze": "תיבה עם מבוך בספרייה",
+  "f_phone": "טלפון",
+  "consent": "אני מאשר/ת לקבל עדכון על ההשקה של ExitCube. <a href=\"{{home}}privacy/\">מדיניות פרטיות</a>",
+  "err_phone": "נא למלא מספר טלפון כדי שנוכל לחזור אליכם.",
+  "err_consent": "נא לסמן את האישור, בלעדיו לא נוכל לכתוב לכם.",
+  "saved": "הפרטים נשמרו. נעדכן אתכם בהשקה.",
+  "save_fail": "לא הצלחנו לשמור את הפרטים. שלחו את ההודעה בוואטסאפ ונקבל אותה."
  },
  "en": {
   "title": "ExitCube — mobile escape games for birthdays",
@@ -288,7 +300,7 @@
   "a6": "Hebrew, Russian or English. You choose before the game.",
   "b_k": "Get in touch",
   "b_t": "Be the first to hear about the launch",
-  "b_s": "Fill in a few details and WhatsApp opens with a ready message.",
+  "b_s": "Leave your phone: we save your request and open WhatsApp with a ready message.",
   "f_name": "Parent's name",
   "f_city": "City",
   "f_kids": "Number of kids",
@@ -321,6 +333,12 @@
   "g_store": "Exit Game storefront and lobby",
   "g_books": "Shelf of leather books with secret signs",
   "g_sliders": "Animal-head slider puzzle",
-  "g_maze": "Maze chest in the library"
+  "g_maze": "Maze chest in the library",
+  "f_phone": "Phone",
+  "consent": "I agree to be contacted about the ExitCube launch. <a href=\"{{home}}privacy/\">Privacy</a>",
+  "err_phone": "Please enter a phone number so we can reach you.",
+  "err_consent": "Please tick the box, otherwise we cannot message you.",
+  "saved": "Your request is saved. We will message you at launch.",
+  "save_fail": "We could not save your request. Send the WhatsApp message and we will get it."
  }
 }
