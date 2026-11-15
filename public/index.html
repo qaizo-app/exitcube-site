@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ExitCube — חדרי בריחה ניידים לימי הולדת</title>
+<meta name="description" content="ExitCube — חדר הבריחה שמגיע אליכם. קופסאות וקוביות משימה לימי הולדת, לגילאי 7–13. עברית · Русский · English.">
+<meta name="theme-color" content="#0a0c0b">
+<link rel="canonical" href="https://exitcube.co.il/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ExitCube">
+<meta property="og:description" content="חדר הבריחה שמגיע אליכם · Квест, который приезжает к вам">
+<meta property="og:url" content="https://exitcube.co.il/">
+<meta property="og:image" content="https://exitcube.co.il/img/trex-m.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0c0b'/%3E%3Crect x='8' y='8' width='16' height='16' fill='none' stroke='%23ffd400' stroke-width='3'/%3E%3Crect x='13.5' y='13.5' width='5' height='5' fill='%2335e85a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap">
+<style>
+@font-face{font-family:Rubik;font-style:normal;font-weight:300 900;font-display:swap;src:url(fonts/rubik-hebrew-wght-normal.woff2) format("woff2");unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
+@font-face{font-family:Rubik;font-style:normal;font-weight:300 900;font-display:swap;src:url(fonts/rubik-cyrillic-wght-normal.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Rubik;font-style:normal;font-weight:300 900;font-display:swap;src:url(fonts/rubik-latin-ext-wght-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:Rubik;font-style:normal;font-weight:300 900;font-display:swap;src:url(fonts/rubik-latin-wght-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  --bg:#0a0c0b;        /* page ground */
+  --panel:#121514;     /* cards */
+  --panel-2:#181c1a;   /* raised */
+  --line:#262b28;      /* hairlines */
+  --ink:#f3f5f2;       /* main text */
+  --dim:#a3aca6;       /* secondary text */
+  --volt:#ffd400;      /* brand yellow: calls to action */
+  --neon:#35e85a;      /* brand green: small accents only */
+  --r:14px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg);overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img,video{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-weight:800;line-height:1.08;letter-spacing:-.01em;text-wrap:balance}
+:focus-visible{outline:2px solid var(--volt);outline-offset:3px}
+.wrap{width:min(1120px,100% - 40px);margin-inline:auto}
+section{scroll-margin-top:84px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--neon)}
+.kicker::before{content:"";width:22px;height:2px;background:var(--neon)}
+.sec{padding-block:clamp(64px,9vw,112px)}
+.sec-head{max-width:640px;margin-bottom:clamp(28px,4vw,44px)}
+.sec-head h2{font-size:clamp(30px,4.6vw,48px);margin-block:14px 14px}
+.sec-head p{color:var(--dim)}
+
+/* header */
+header{position:fixed;inset:0 0 auto;z-index:50;transition:background .25s,border-color .25s;border-bottom:1px solid transparent}
+header.solid{background:rgba(10,12,11,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom-color:var(--line)}
+.bar{display:flex;align-items:center;gap:18px;height:68px}
+.logo{font-weight:800;font-size:22px;letter-spacing:.02em;text-decoration:none;direction:ltr;unicode-bidi:isolate}
+.logo b{color:var(--volt);font-weight:800}
+nav{display:flex;gap:26px;margin-inline-start:auto;font-size:15px}
+nav a{text-decoration:none;color:#d5dbd6}
+nav a:hover{color:#fff}
+.langs{display:flex;gap:2px;padding:3px;border:1px solid rgba(255,255,255,.16);border-radius:999px;direction:ltr}
+.langs button{background:none;border:0;border-radius:999px;color:#d5dbd6;font:500 13px Rubik,system-ui,sans-serif;padding:5px 10px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--ink);color:#0a0c0b}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font:700 16px Rubik,system-ui,sans-serif;padding:14px 26px;border-radius:999px;border:1.5px solid var(--volt);background:var(--volt);color:#141200;cursor:pointer;transition:transform .15s,background .15s,box-shadow .15s}
+.btn:hover{background:#ffe04a;transform:translateY(-1px);box-shadow:0 10px 30px rgba(255,212,0,.22)}
+.btn.ghost{background:rgba(10,12,11,.35);border-color:rgba(255,255,255,.4);color:var(--ink);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.btn.ghost:hover{background:rgba(255,255,255,.1);box-shadow:none;border-color:#fff}
+.btn.sm{padding:9px 18px;font-size:14px}
+@media (max-width:900px){nav{display:none}.langs{margin-inline-start:auto}}
+@media (max-width:460px){.bar .btn{display:none}}
+
+/* hero */
+.hero{position:relative;min-height:min(100svh,860px);display:flex;align-items:flex-end;isolation:isolate}
+.hero picture,.hero .shade{position:absolute;inset:0;z-index:-1}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.hero .shade{background:linear-gradient(180deg,rgba(10,12,11,.6) 0,transparent 20%,transparent 50%,rgba(10,12,11,.88) 84%,var(--bg) 100%)}
+@media (min-width:901px){
+  .hero .shade{background:linear-gradient(180deg,rgba(10,12,11,.6) 0,transparent 20%,transparent 72%,var(--bg) 100%),linear-gradient(90deg,rgba(10,12,11,.9) 0,rgba(10,12,11,.6) 36%,transparent 66%)}
+  [dir="rtl"] .hero .shade{background:linear-gradient(180deg,rgba(10,12,11,.6) 0,transparent 20%,transparent 72%,var(--bg) 100%),linear-gradient(270deg,rgba(10,12,11,.9) 0,rgba(10,12,11,.6) 36%,transparent 66%)}
+  [dir="rtl"] .hero img{transform:scaleX(-1)}
+  .hero{align-items:center}
+  .hero .inner{padding-block:120px 60px;max-width:540px}
+  .hero h1{font-size:clamp(48px,5.2vw,70px)}
+}
+.hero .inner{padding-block:120px clamp(40px,7vw,72px);max-width:720px}
+.pill{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:500;padding:7px 14px;border-radius:999px;background:rgba(10,12,11,.6);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 0 4px rgba(53,232,90,.2)}
+.hero h1{font-size:clamp(40px,7.4vw,84px);margin-block:20px 18px;text-shadow:0 2px 30px rgba(0,0,0,.5)}
+.hero h1 em{font-style:normal;color:var(--volt)}
+.hero .sub{font-size:clamp(17px,2vw,20px);color:#e2e7e3;max-width:36em;text-shadow:0 1px 14px rgba(0,0,0,.6)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--line)}
+.facts div{padding:26px 8px;text-align:center;border-inline-start:1px solid var(--line)}
+.facts div:first-child{border-inline-start:0}
+.facts b{display:block;font-size:clamp(24px,3.4vw,36px);font-weight:800;line-height:1.1}
+.facts span{color:var(--dim);font-size:15px}
+@media (max-width:640px){.facts{grid-template-columns:1fr}.facts div{border-inline-start:0;border-top:1px solid var(--line);padding:18px 8px}.facts div:first-child{border-top:0}}
+
+/* quests */
+.quest{display:grid;grid-template-columns:1.15fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.quest+.quest{margin-top:22px}
+.quest:nth-of-type(even) .pic{order:2}
+.quest .pic{position:relative;min-height:320px;background:#000}
+.quest .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.quest .body{padding:clamp(24px,3.6vw,44px);display:flex;flex-direction:column;gap:16px;justify-content:center}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.status{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--volt);color:#141200}
+.status.next{background:transparent;color:var(--ink);border:1px solid #4a514d}
+.kind{font-size:14px;color:var(--dim)}
+.quest h3{font-size:clamp(26px,3.2vw,36px)}
+.quest p{color:#c9d0cb}
+.specs{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.specs li{font-size:14px;padding:6px 12px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
+.quest .more{align-self:flex-start;margin-top:6px;font-weight:700;color:var(--volt);text-decoration:none;border-bottom:1.5px solid transparent}
+.quest .more:hover{border-bottom-color:var(--volt)}
+.note{color:#7f8983;font-size:14px;margin-top:18px}
+@media (max-width:820px){.quest{grid-template-columns:1fr}.quest:nth-of-type(even) .pic{order:0}.quest .pic{min-height:0;aspect-ratio:16/10}}
+
+/* steps */
+.band{background:var(--panel);border-block:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);counter-reset:s}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--volt);color:var(--volt);font-weight:800;font-size:18px;margin-bottom:18px}
+.step h3{font-size:21px;margin-bottom:8px}
+.step p{color:var(--dim)}
+@media (max-width:760px){.steps{grid-template-columns:1fr}}
+
+/* story */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center}
+.story h2{font-size:clamp(30px,4.6vw,48px);margin-block:14px 18px}
+.story p{color:#c9d0cb}
+.rooms{margin-top:26px}
+.rooms span{display:block;font-size:14px;color:var(--dim);margin-bottom:10px}
+.rooms ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.rooms li{font-size:15px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.reel{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#050605;aspect-ratio:4/3}
+.reel video{width:100%;height:100%;object-fit:cover}
+@media (max-width:820px){.story{grid-template-columns:1fr}}
+
+/* faq */
+.faq{max-width:780px}
+details{border-bottom:1px solid var(--line)}
+details:first-of-type{border-top:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;font-weight:500;font-size:18px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";flex:none;font-size:26px;font-weight:400;line-height:1;color:var(--volt);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--dim);padding-bottom:20px;max-width:42em}
+
+/* booking */
+.book{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-columns:1.3fr .7fr;overflow:hidden;position:relative}
+.book::before{content:"";position:absolute;inset:0 0 auto;height:6px;background:repeating-linear-gradient(-45deg,var(--volt) 0 14px,#16160f 14px 28px)}
+.form{padding:clamp(26px,4vw,44px);display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form .full{grid-column:1/-1}
+.field{display:grid;gap:7px;min-width:0}
+.field label{font-size:14px;color:var(--dim)}
+.field input,.field select{width:100%;background:#0c0f0d;border:1px solid #333a36;color:var(--ink);font:16px Rubik,system-ui,sans-serif;padding:13px 14px;border-radius:10px;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23a3aca6' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - 16px) 50%;padding-inline-end:40px}
+[dir="rtl"] .field select{background-position:16px 50%}
+.field input:focus,.field select:focus{border-color:var(--volt);outline:none;box-shadow:0 0 0 3px rgba(255,212,0,.16)}
+.side{padding:clamp(26px,4vw,44px);background:var(--panel-2);border-inline-start:1px solid var(--line);display:flex;flex-direction:column;gap:10px;justify-content:center}
+.side span{font-size:14px;color:var(--dim)}
+.phone{font-size:26px;font-weight:800;direction:ltr;unicode-bidi:isolate;text-align:start;text-decoration:none;font-variant-numeric:tabular-nums}
+.side p{color:var(--dim);font-size:15px;margin-top:10px}
+@media (max-width:860px){.book{grid-template-columns:1fr}.side{border-inline-start:0;border-top:1px solid var(--line)}}
+@media (max-width:560px){.form{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,112px)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding-block:26px;color:#7f8983;font-size:14px}
+footer span{direction:ltr;unicode-bidi:isolate}
+
+/* gentle reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="ExitCube">EXIT<b>CUBE</b></a>
+    <nav>
+      <a href="#quests" data-i18n="nav_quests"></a>
+      <a href="#how" data-i18n="nav_how"></a>
+      <a href="#story" data-i18n="nav_story"></a>
+      <a href="#faq" data-i18n="nav_faq"></a>
+    </nav>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="he">עב</button>
+      <button type="button" data-lang="ru">RU</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+    <a class="btn sm" href="#book" data-i18n="nav_book"></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <picture>
+      <source media="(max-width:700px)" srcset="img/trex-m.jpg">
+      <img src="img/trex.jpg" alt="" fetchpriority="high">
+    </picture>
+    <div class="shade"></div>
+    <div class="wrap">
+      <div class="inner">
+        <span class="pill"><i></i><span data-i18n="pill"></span></span>
+        <h1 data-i18n="h1"></h1>
+        <p class="sub" data-i18n="sub"></p>
+        <div class="ctas">
+          <a class="btn" href="#book" data-i18n="cta1"></a>
+          <a class="btn ghost" href="#quests" data-i18n="cta2"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="facts">
+      <div><b data-i18n="f1"></b><span data-i18n="f1d"></span></div>
+      <div><b>7–13</b><span data-i18n="f2d"></span></div>
+      <div><b data-i18n="f3"></b><span data-i18n="f3d"></span></div>
+    </div>
+  </div>
+
+  <section id="quests" class="sec wrap">
+    <div class="sec-head rv">
+      <span class="kicker" data-i18n="q_k"></span>
+      <h2 data-i18n="q_t"></h2>
+      <p data-i18n="q_s"></p>
+    </div>
+
+    <article class="quest rv">
+      <div class="pic"><img src="img/trex-m.jpg" alt="" loading="lazy"></div>
+      <div class="body">
+        <div class="tags"><span class="status" data-i18n="st_dev"></span><span class="kind" data-i18n="k_box"></span></div>
+        <h3 data-i18n="m1_t"></h3>
+        <p data-i18n="m1_d"></p>
+        <ul class="specs"><li data-i18n="s_56"></li><li data-i18n="s_self"></li><li data-i18n="s_hints"></li></ul>
+        <a class="more" href="#book" data-pick="trex" data-i18n="more"></a>
+      </div>
+    </article>
+
+    <article class="quest rv">
+      <div class="pic"><img src="img/cubes.jpg" alt="" loading="lazy"></div>
+      <div class="body">
+        <div class="tags"><span class="status" data-i18n="st_up"></span><span class="kind" data-i18n="k_host"></span></div>
+        <h3 data-i18n="m2_t"></h3>
+        <p data-i18n="m2_d"></p>
+        <ul class="specs"><li data-i18n="s_6c"></li><li data-i18n="s_30"></li><li data-i18n="s_where"></li></ul>
+        <a class="more" href="#book" data-pick="space" data-i18n="more"></a>
+      </div>
+    </article>
+
+    <article class="quest rv">
+      <div class="pic"><img src="img/magic.jpg" alt="" loading="lazy"></div>
+      <div class="body">
+        <div class="tags"><span class="status next" data-i18n="st_next"></span><span class="kind" data-i18n="k_box"></span></div>
+        <h3 data-i18n="m3_t"></h3>
+        <p data-i18n="m3_d"></p>
+        <ul class="specs"><li data-i18n="s_56"></li><li data-i18n="s_self"></li></ul>
+        <a class="more" href="#book" data-pick="magic" data-i18n="more"></a>
+      </div>
+    </article>
+
+    <p class="note" data-i18n="q_note"></p>
+  </section>
+
+  <section id="how" class="band">
+    <div class="sec wrap">
+      <div class="sec-head rv">
+        <span class="kicker" data-i18n="h_k"></span>
+        <h2 data-i18n="h_t"></h2>
+      </div>
+      <div class="steps rv">
+        <div class="step"><h3 data-i18n="s1_t"></h3><p data-i18n="s1_d"></p></div>
+        <div class="step"><h3 data-i18n="s2_t"></h3><p data-i18n="s2_d"></p></div>
+        <div class="step"><h3 data-i18n="s3_t"></h3><p data-i18n="s3_d"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="story" class="sec wrap">
+    <div class="story">
+      <div class="rv">
+        <span class="kicker" data-i18n="st_k"></span>
+        <h2 data-i18n="st_t"></h2>
+        <p data-i18n="st_p"></p>
+        <div class="rooms">
+          <span data-i18n="rooms"></span>
+          <ul><li data-i18n="r1"></li><li data-i18n="r2"></li><li data-i18n="r3"></li><li data-i18n="r4"></li><li data-i18n="r5"></li><li data-i18n="r6"></li></ul>
+        </div>
+      </div>
+      <div class="reel rv"><video id="logoAnim" src="media/exitcube-logo.mp4" poster="media/exitcube-logo.jpg" muted playsinline preload="metadata" aria-label="Exit Game → ExitCube"></video></div>
+    </div>
+  </section>
+
+  <section id="faq" class="band">
+    <div class="sec wrap">
+      <div class="sec-head rv">
+        <span class="kicker" data-i18n="fq_k"></span>
+        <h2 data-i18n="fq_t"></h2>
+      </div>
+      <div class="faq rv">
+        <details><summary data-i18n="q1"></summary><p data-i18n="a1"></p></details>
+        <details><summary data-i18n="q2"></summary><p data-i18n="a2"></p></details>
+        <details><summary data-i18n="q3"></summary><p data-i18n="a3"></p></details>
+        <details><summary data-i18n="q4"></summary><p data-i18n="a4"></p></details>
+        <details><summary data-i18n="q5"></summary><p data-i18n="a5"></p></details>
+        <details><summary data-i18n="q6"></summary><p data-i18n="a6"></p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="book" class="sec wrap" style="padding-bottom:0">
+    <div class="sec-head rv">
+      <span class="kicker" data-i18n="b_k"></span>
+      <h2 data-i18n="b_t"></h2>
+      <p data-i18n="b_s"></p>
+    </div>
+    <div class="book rv">
+      <form class="form" id="form">
+        <div class="field"><label for="f-name" data-i18n="f_name"></label><input id="f-name" autocomplete="name"></div>
+        <div class="field"><label for="f-city" data-i18n="f_city"></label><input id="f-city" autocomplete="address-level2"></div>
+        <div class="field"><label for="f-kids" data-i18n="f_kids"></label><input id="f-kids" type="number" min="1" max="30" inputmode="numeric"></div>
+        <div class="field"><label for="f-age" data-i18n="f_age"></label>
+          <select id="f-age"><option value="7–9">7–9</option><option value="10–13">10–13</option><option value="mix" data-i18n="age_mix"></option></select></div>
+        <div class="field full"><label for="f-msn" data-i18n="f_msn"></label>
+          <select id="f-msn"><option value="any" data-i18n="o_any"></option><option value="trex" data-i18n="m1_t"></option><option value="space" data-i18n="m2_t"></option><option value="magic" data-i18n="m3_t"></option></select></div>
+        <div class="full"><a class="btn" id="send" href="https://wa.me/972527392229" target="_blank" rel="noopener" data-i18n="send"></a></div>
+      </form>
+      <div class="side">
+        <span data-i18n="call"></span>
+        <a class="phone" href="tel:+972527392229">052-739-2229</a>
+        <p data-i18n="area"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 ExitCube</span><span>exitcube.co.il</span></div></footer>
+
+<script>
+const T={
+ru:{title:"ExitCube — мобильные квесты на день рождения",
+nav_quests:"Миссии",nav_how:"Как это работает",nav_story:"О нас",nav_faq:"Вопросы",nav_book:"Узнать первым",
+pill:"Первая миссия уже в сборке",h1:"Квест, который <em>приезжает</em> к вам",
+sub:"Настоящий квест в одном боксе: загадки, шифры, свет и спецэффекты. Дома, в зале или в парке. Для детей 7–13 лет.",
+cta1:"Узнать о запуске первым",cta2:"Смотреть миссии",
+f1:"С 2015",f1d:"одни из первых квестов в Израиле",f2d:"возраст игроков",f3:"3 языка",f3d:"иврит · русский · английский",
+q_k:"Миссии",q_t:"У каждой миссии своя история",q_s:"Свои загадки, свой реквизит и свои эффекты. Сейчас все миссии в работе: оставьте заявку, и мы сообщим о запуске.",
+st_dev:"В разработке",st_up:"Апгрейд",st_next:"Следующие",k_box:"Бокс в аренду",k_host:"С ведущим",
+m1_t:"Операция Т-Рекс",m1_d:"Редкое яйцо динозавра вот-вот вылупится. Агенты решают загадки и шифры, чтобы помочь ему появиться на свет: со светом, туманом и рёвом. Динозаврик остаётся имениннику.",
+m2_t:"Космические агенты",m2_d:"Шесть кубов, две команды и наш ведущий. Злодей захватил космическую станцию, и агенты взламывают шлюзы и обезвреживают супероружие, пока не вышло время.",
+m3_t:"Волшебные миссии",m3_d:"«Кубок магии», легенда Exit Game, возвращается в виде бокса: палочки, заклинания и зелья. За ним идёт «Академия юных волшебниц» с уроком зельеварения.",
+s_56:"5–6 детей",s_self:"проводите сами",s_hints:"подсказки в телефоне",s_6c:"6 кубов",s_30:"до 30 детей",s_where:"дома, в зале или на улице",
+more:"Сообщить о запуске →",q_note:"Изображения — концепт-арт. Миссии сейчас в сборке.",
+h_k:"Как это работает",h_t:"Три шага до приключения",
+s1_t:"Выбираете миссию",s1_d:"По возрасту, числу детей и месту праздника.",
+s2_t:"Игра приезжает",s2_d:"Бокс забираете сами или получаете доставкой. Игру на шести кубах привозит и проводит наш ведущий.",
+s3_t:"Дети в деле",s3_d:"Около часа загадок и эффектов. Подсказки на иврите, русском или английском.",
+st_k:"С 2015 года",st_t:"От Exit Game к ExitCube",st_p:"В 2015 году мы открыли в Ашдоде Exit Game, одни из первых квест-комнат в Израиле. Сегодня сами собираем боксы, электронику и реквизит, чтобы настоящий квест приехал на любой день рождения.",
+rooms:"Комнаты Exit Game, которыми гремел Ашдод",r1:"Кубок магии",r2:"Двойной агент",r3:"Машина времени",r4:"Аладдин",r5:"Спиритист",r6:"Лифт",
+fq_k:"Вопросы родителей",fq_t:"Коротко о главном",
+q1:"Когда можно будет заказать?",a1:"Первые миссии сейчас в сборке. Оставьте заявку, и мы напишем вам, как только откроем бронирование.",
+q2:"Сколько нужно места?",a2:"Для бокса хватит одной комнаты. Для игры на шести кубах нужны три стола в комнате или на открытой площадке.",
+q3:"Можно играть на улице?",a3:"Да. Боксы и кубы работают от собственных аккумуляторов, так что подойдёт и парк.",
+q4:"Это безопасно?",a4:"Питание низковольтное, 12 В. Вся электроника закрыта внутри корпуса.",
+q5:"Кто проводит игру?",a5:"Бокс вы проводите сами, с инструкцией и подсказками в телефоне. Игру на шести кубах ведёт наш ведущий.",
+q6:"На каком языке игра?",a6:"Иврит, русский или английский. Язык выбираете перед игрой.",
+b_k:"Заявка",b_t:"Узнайте о запуске первыми",b_s:"Заполните пару полей, и откроется WhatsApp с готовым сообщением.",
+f_name:"Имя родителя",f_city:"Город",f_kids:"Сколько детей",f_age:"Возраст",f_msn:"Какая миссия интересна",age_mix:"Смешанный",o_any:"Любая",
+send:"Отправить в WhatsApp",call:"Или позвоните",area:"Ашдод и окрестности. Другие города по договорённости.",
+msg:["Здравствуйте! Сообщите мне, когда ExitCube запустится.","Миссия","Детей","Возраст","Город","Имя"]},
+he:{title:"ExitCube — חדרי בריחה ניידים לימי הולדת",
+nav_quests:"משימות",nav_how:"איך זה עובד",nav_story:"הסיפור שלנו",nav_faq:"שאלות",nav_book:"עדכנו אותי",
+pill:"המשימה הראשונה כבר בבנייה",h1:"חדר הבריחה <em>שמגיע</em> אליכם",
+sub:"חדר בריחה אמיתי בתוך קופסה אחת: חידות, צפנים, אורות ואפקטים. בבית, באולם או בפארק. לילדים בגילאי 7–13.",
+cta1:"עדכנו אותי בהשקה",cta2:"לכל המשימות",
+f1:"מאז 2015",f1d:"מחדרי הבריחה הראשונים בישראל",f2d:"גיל המשתתפים",f3:"3 שפות",f3d:"עברית · רוסית · אנגלית",
+q_k:"המשימות",q_t:"לכל משימה סיפור משלה",q_s:"חידות משלה, אביזרים משלה ואפקטים משלה. כרגע כל המשימות בעבודה: השאירו פרטים ונעדכן אתכם בהשקה.",
+st_dev:"בפיתוח",st_up:"בשדרוג",st_next:"הבאות בתור",k_box:"קופסה להשכרה",k_host:"עם מנחה",
+m1_t:"מבצע טי־רקס",m1_d:"ביצת דינוזאור נדירה עומדת לבקוע. הסוכנים פותרים חידות וצפנים כדי לעזור לה לבקוע: עם אור, ערפל ושאגה. הדינוזאור הקטן נשאר אצל ילד יום ההולדת.",
+m2_t:"סוכנים בחלל",m2_d:"שש קוביות, שתי קבוצות והמנחה שלנו. נבל השתלט על תחנת חלל, והסוכנים פורצים את התאים ומנטרלים את נשק־העל לפני שהזמן נגמר.",
+m3_t:"משימות הקסם",m3_d:"״גביע הקסם״, האגדה של Exit Game, חוזר כקופסה: שרביטים, לחשים ושיקויים. אחריו מגיעה ״האקדמיה לקוסמות צעירות״ עם שיעור שיקויים.",
+s_56:"5–6 ילדים",s_self:"מפעילים בעצמכם",s_hints:"רמזים בטלפון",s_6c:"6 קוביות",s_30:"עד 30 ילדים",s_where:"בבית, באולם או בחוץ",
+more:"עדכנו אותי בהשקה ←",q_note:"התמונות הן הדמיות. המשימות נמצאות כעת בבנייה.",
+h_k:"איך זה עובד",h_t:"שלושה צעדים להרפתקה",
+s1_t:"בוחרים משימה",s1_d:"לפי גיל, מספר הילדים ומקום החגיגה.",
+s2_t:"המשחק מגיע",s2_d:"את הקופסה אוספים או מקבלים במשלוח. את משחק שש הקוביות מביא ומפעיל המנחה שלנו.",
+s3_t:"הילדים בפעולה",s3_d:"כשעה של חידות ואפקטים. הרמזים בעברית, ברוסית או באנגלית.",
+st_k:"מאז 2015",st_t:"מ־Exit Game ל־ExitCube",st_p:"בשנת 2015 פתחנו באשדוד את Exit Game, מחדרי הבריחה הראשונים בישראל. היום אנחנו בונים בעצמנו את הקופסאות, האלקטרוניקה והאביזרים, כדי שחדר בריחה אמיתי יגיע לכל יום הולדת.",
+rooms:"החדרים של Exit Game שהרעישו את אשדוד",r1:"גביע הקסם",r2:"סוכן כפול",r3:"מכונת הזמן",r4:"אלאדין",r5:"הספיריטואליסט",r6:"המעלית",
+fq_k:"שאלות של הורים",fq_t:"בקצרה, מה שחשוב",
+q1:"מתי אפשר יהיה להזמין?",a1:"המשימות הראשונות נמצאות כעת בבנייה. השאירו פרטים ונכתוב לכם ברגע שנפתח הזמנות.",
+q2:"כמה מקום צריך?",a2:"לקופסה מספיק חדר אחד. למשחק שש הקוביות צריך שלושה שולחנות בחדר או בשטח פתוח.",
+q3:"אפשר לשחק בחוץ?",a3:"כן. הקופסאות והקוביות פועלות על סוללות משלהן, כך שגם פארק מתאים.",
+q4:"זה בטוח?",a4:"מתח נמוך של 12 וולט, וכל האלקטרוניקה סגורה בתוך המארז.",
+q5:"מי מפעיל את המשחק?",a5:"את הקופסה אתם מפעילים בעצמכם, עם הוראות ורמזים בטלפון. את משחק שש הקוביות מנחה המנחה שלנו.",
+q6:"באיזו שפה המשחק?",a6:"עברית, רוסית או אנגלית. בוחרים שפה לפני המשחק.",
+b_k:"השארת פרטים",b_t:"היו הראשונים לדעת על ההשקה",b_s:"ממלאים כמה פרטים, ווואטסאפ נפתח עם הודעה מוכנה.",
+f_name:"שם ההורה",f_city:"עיר",f_kids:"מספר ילדים",f_age:"גיל",f_msn:"איזו משימה מעניינת אתכם",age_mix:"מעורב",o_any:"כל משימה",
+send:"שליחה בוואטסאפ",call:"או התקשרו",area:"אשדוד והסביבה. ערים אחרות בתיאום.",
+msg:["שלום! אשמח לעדכון כש-ExitCube יושק.","משימה","ילדים","גיל","עיר","שם"]},
+en:{title:"ExitCube — mobile escape games for birthdays",
+nav_quests:"Missions",nav_how:"How it works",nav_story:"Our story",nav_faq:"FAQ",nav_book:"Notify me",
+pill:"First mission is being built",h1:"The escape game that <em>comes</em> to you",
+sub:"A real escape room inside one box: puzzles, ciphers, lights and effects. At home, in a hall or in the park. For kids aged 7–13.",
+cta1:"Tell me when you launch",cta2:"See the missions",
+f1:"Since 2015",f1d:"among Israel's first escape rooms",f2d:"player age",f3:"3 languages",f3d:"Hebrew · Russian · English",
+q_k:"Missions",q_t:"Every mission has its own story",q_s:"Its own puzzles, props and effects. All missions are in the works right now: leave your details and we'll tell you when we launch.",
+st_dev:"In development",st_up:"Upgrading",st_next:"Up next",k_box:"Rental box",k_host:"Hosted",
+m1_t:"Operation T-Rex",m1_d:"A rare dinosaur egg is about to hatch. Agents solve puzzles and ciphers to help it hatch, with light, mist and a roar. The baby dinosaur stays with the birthday kid.",
+m2_t:"Space Agents",m2_d:"Six cubes, two teams and our host. A villain has seized a space station, and the agents crack the airlocks and disarm the superweapon before time runs out.",
+m3_t:"Magic missions",m3_d:"Goblet of Magic, an Exit Game legend, returns as a box: wands, spells and potions. Young Sorceress Academy follows with a potions class.",
+s_56:"5–6 kids",s_self:"you run it",s_hints:"hints on your phone",s_6c:"6 cubes",s_30:"up to 30 kids",s_where:"home, hall or outdoors",
+more:"Notify me at launch →",q_note:"Images are concept art. The missions are being built right now.",
+h_k:"How it works",h_t:"Three steps to the adventure",
+s1_t:"Pick a mission",s1_d:"Based on age, number of kids and the party venue.",
+s2_t:"The game arrives",s2_d:"Pick up the box or get it delivered. The six-cube game is brought and run by our host.",
+s3_t:"Kids in action",s3_d:"About an hour of puzzles and effects. Hints in Hebrew, Russian or English.",
+st_k:"Since 2015",st_t:"From Exit Game to ExitCube",st_p:"In 2015 we opened Exit Game in Ashdod, one of the first escape rooms in Israel. Today we build our own boxes, electronics and props, so a real escape game can come to any birthday party.",
+rooms:"The Exit Game rooms Ashdod talked about",r1:"Goblet of Magic",r2:"Double Agent",r3:"Time Machine",r4:"Aladdin",r5:"The Spiritualist",r6:"The Lift",
+fq_k:"Parents ask",fq_t:"The short answers",
+q1:"When can we book?",a1:"The first missions are being built right now. Leave your details and we'll message you as soon as booking opens.",
+q2:"How much space do we need?",a2:"One room is enough for a box. The six-cube game needs three tables in a room or an open area.",
+q3:"Can we play outdoors?",a3:"Yes. The boxes and cubes run on their own batteries, so a park works too.",
+q4:"Is it safe?",a4:"Low-voltage 12 V power, and all electronics are sealed inside the case.",
+q5:"Who runs the game?",a5:"You run the box yourselves, with instructions and hints on your phone. The six-cube game is run by our host.",
+q6:"What language is the game in?",a6:"Hebrew, Russian or English. You choose before the game.",
+b_k:"Get in touch",b_t:"Be the first to hear about the launch",b_s:"Fill in a few details and WhatsApp opens with a ready message.",
+f_name:"Parent's name",f_city:"City",f_kids:"Number of kids",f_age:"Age",f_msn:"Which mission interests you",age_mix:"Mixed",o_any:"Any",
+send:"Send on WhatsApp",call:"Or call us",area:"Ashdod and nearby. Other cities by arrangement.",
+msg:["Hi! Please let me know when ExitCube launches.","Mission","Kids","Age","City","Name"]}
+};
+const PHONE="972527392229";
+const MSN={any:"o_any",trex:"m1_t",space:"m2_t",magic:"m3_t"};
+let lang="he";
+try{const s=localStorage.getItem("xc-lang");if(s&&T[s])lang=s;else{const n=(navigator.language||"").slice(0,2);if(n==="ru"||n==="en")lang=n;}}catch(e){}
+const $=s=>document.querySelector(s);
+
+function setLang(l){
+  lang=l;const d=T[l];
+  document.documentElement.lang=l;
+  document.documentElement.dir=l==="he"?"rtl":"ltr";
+  document.title=d.title;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{const v=d[el.dataset.i18n];if(v!==undefined)el.innerHTML=v;});
+  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
+  buildLink();
+  try{localStorage.setItem("xc-lang",l)}catch(e){}
+}
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+
+function buildLink(){
+  const d=T[lang],m=d.msg,v=id=>$(id).value.trim();
+  const age=$("#f-age").value==="mix"?d.age_mix:$("#f-age").value;
+  const lines=[m[0],`${m[1]}: ${d[MSN[$("#f-msn").value]]}`];
+  if(v("#f-kids"))lines.push(`${m[2]}: ${v("#f-kids")}`);
+  lines.push(`${m[3]}: ${age}`);
+  if(v("#f-city"))lines.push(`${m[4]}: ${v("#f-city")}`);
+  if(v("#f-name"))lines.push(`${m[5]}: ${v("#f-name")}`);
+  $("#send").href=`https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join("\n"))}`;
+}
+$("#form").addEventListener("input",buildLink);
+$("#form").addEventListener("change",buildLink);
+$("#form").addEventListener("submit",e=>e.preventDefault());
+document.querySelectorAll("[data-pick]").forEach(a=>a.addEventListener("click",()=>{$("#f-msn").value=a.dataset.pick;buildLink();}));
+
+// header turns solid once the hero image scrolls away
+const hdr=$("#hdr");
+const onScroll=()=>hdr.classList.toggle("solid",scrollY>40);
+addEventListener("scroll",onScroll,{passive:true});onScroll();
+
+// gentle reveal on scroll
+const rvs=document.querySelectorAll(".rv");
+if("IntersectionObserver" in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{rootMargin:"0px 0px -8% 0px"});
+  rvs.forEach(el=>io.observe(el));
+}else rvs.forEach(el=>el.classList.add("in"));
+
+setLang(lang);
+
+// logo film: plays when it scrolls into view, then again every 20 s
+(function(){const v=$("#logoAnim");if(!v||matchMedia("(prefers-reduced-motion: reduce)").matches||!("IntersectionObserver" in window))return;
+  let seen=false,timer=null;
+  const run=()=>{if(document.hidden||!seen)return;try{v.currentTime=0;const p=v.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}};
+  v.addEventListener("ended",()=>{clearTimeout(timer);timer=setTimeout(run,20000);});
+  new IntersectionObserver(es=>{seen=es[0].isIntersecting;if(seen&&(v.paused||v.ended))run();},{threshold:.5}).observe(v);
+})();
+</script>
+</body>
+</html>
