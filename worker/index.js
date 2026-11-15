@@ -22,6 +22,7 @@ export default {
 	async fetch(request, env, ctx) {
 		const url = new URL(request.url);
 		if (url.pathname === "/api/lead") return handleLead(request, env, ctx);
+		if (url.pathname === "/api/tg-test") return telegramSelfTest(env);
 		if (url.pathname.startsWith("/api/")) return json({ ok: false, error: "not_found" }, 404);
 		return env.ASSETS.fetch(request);
 	},
@@ -180,4 +181,42 @@ async function notifyTelegram(env, db, lead, id) {
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify({ chat_id: chat, text: lines.join("\n"), disable_web_page_preview: true }),
 	});
+}
+
+// Temporary setup helper: open /api/tg-test in a browser to see which step of
+// the Telegram link fails. Shows no secrets. Remove once notifications work.
+async function telegramSelfTest(env) {
+	const say = (text) => new Response(text + "\n", { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } });
+	const token = env.TELEGRAM_BOT_TOKEN;
+	if (!token) {
+		return say("ШАГ 1 — НЕТ КЛЮЧА.\nCloudflare не передал сайту ключ бота. В настройках проекта нет секрета с именем TELEGRAM_BOT_TOKEN (проверь имя буква в букву и что тип — Secret, а не Text).");
+	}
+	let me;
+	try {
+		me = await (await fetch(`https://api.telegram.org/bot${token}/getMe`)).json();
+	} catch (e) {
+		return say("ШАГ 2 — Telegram не ответил: " + e.message);
+	}
+	if (!me.ok) return say("ШАГ 2 — КЛЮЧ НЕ ПОДХОДИТ.\nTelegram ответил: " + (me.description || "ошибка") + "\nСкопируй ключ у @BotFather заново и замени секрет.");
+	const bot = "@" + me.result.username;
+
+	await ensureSchema(env.DB);
+	let chat;
+	try {
+		chat = await telegramChatId(env, env.DB, token);
+	} catch (e) {
+		return say(`ШАГ 3 — ошибка при поиске получателя (${bot}): ` + e.message);
+	}
+	if (!chat) {
+		return say(`ШАГ 3 — НЕ ЗНАЮ, КОМУ ПИСАТЬ.\nКлюч рабочий, бот ${bot} отвечает, но ему ещё никто не написал.\nОткрой ${bot} в Telegram, отправь ему /start и обнови эту страницу.`);
+	}
+	const r = await (
+		await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({ chat_id: chat, text: "✅ ExitCube: связь с сайтом работает. Сюда будут приходить заявки." }),
+		})
+	).json();
+	if (!r.ok) return say(`ШАГ 4 — НЕ УДАЛОСЬ ОТПРАВИТЬ (${bot}).\nTelegram ответил: ` + (r.description || "ошибка"));
+	return say(`ВСЁ РАБОТАЕТ.\nБот ${bot} только что отправил тебе проверочное сообщение. Заявки с сайта будут приходить туда же.`);
 }
