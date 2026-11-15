@@ -164,6 +164,7 @@ def build_landing(lang):
 
     s, n = re.subn(r'(<(\w+)([^>]*?) data-i18n="(\w+)"([^>]*)>)(</\2>)', fill, s)
     assert "data-i18n" not in s, "unfilled text slot"
+    s = re.sub(r"\{\{s:(\w+)\}\}", lambda m: html.escape(d[m.group(1)], quote=True), s)
     s = s.replace(f'<option value="{lang}">', f'<option value="{lang}" selected>')
     jsonld = {
         "@context": "https://schema.org", "@type": "EntertainmentBusiness",
