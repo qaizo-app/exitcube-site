@@ -161,7 +161,7 @@ async function telegramChatId(env, db, token) {
 }
 
 async function notifyTelegram(env, db, lead, id) {
-	const token = env.TELEGRAM_BOT_TOKEN;
+	const token = botToken(env);
 	if (!token) return;
 	const chat = await telegramChatId(env, db, token);
 	if (!chat) return;
@@ -187,7 +187,7 @@ async function notifyTelegram(env, db, lead, id) {
 // the Telegram link fails. Shows no secrets. Remove once notifications work.
 async function telegramSelfTest(env) {
 	const say = (text) => new Response(text + "\n", { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } });
-	const token = env.TELEGRAM_BOT_TOKEN;
+	const token = botToken(env);
 	if (!token) {
 		return say("ШАГ 1 — НЕТ КЛЮЧА.\nCloudflare не передал сайту ключ бота. В настройках проекта нет секрета с именем TELEGRAM_BOT_TOKEN (проверь имя буква в букву и что тип — Secret, а не Text).");
 	}
@@ -219,4 +219,17 @@ async function telegramSelfTest(env) {
 	).json();
 	if (!r.ok) return say(`ШАГ 4 — НЕ УДАЛОСЬ ОТПРАВИТЬ (${bot}).\nTelegram ответил: ` + (r.description || "ошибка"));
 	return say(`ВСЁ РАБОТАЕТ.\nБот ${bot} только что отправил тебе проверочное сообщение. Заявки с сайта будут приходить туда же.`);
+}
+
+// The secret is meant to be called TELEGRAM_BOT_TOKEN, but accept any dashboard
+// name that mentions Telegram (e.g. TELEGRAM_BOT) as long as the value has the
+// shape of a bot key, so a naming slip does not silently switch notices off.
+function botToken(env) {
+	const shape = /^\d{6,}:[\w-]{30,}$/;
+	if (typeof env.TELEGRAM_BOT_TOKEN === "string" && env.TELEGRAM_BOT_TOKEN.trim()) return env.TELEGRAM_BOT_TOKEN.trim();
+	for (const key of Object.keys(env)) {
+		const v = env[key];
+		if (/telegram|tg_?bot/i.test(key) && typeof v === "string" && shape.test(v.trim())) return v.trim();
+	}
+	return "";
 }
