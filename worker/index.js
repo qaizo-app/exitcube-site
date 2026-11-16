@@ -207,7 +207,7 @@ async function telegramSelfTest(env) {
 	} catch (e) {
 		return say("ШАГ 2 — Telegram не ответил: " + e.message);
 	}
-	if (!me.ok) return say("ШАГ 2 — КЛЮЧ НЕ ПОДХОДИТ.\nTelegram ответил: " + (me.description || "ошибка") + "\nСкопируй ключ у @BotFather заново и замени секрет.");
+	if (!me.ok) return say("ШАГ 2 — КЛЮЧ НЕ ПОДХОДИТ.\nTelegram ответил: " + (me.description || "ошибка") + "\nФорма сохранённого ключа: " + keyShape(env) + ".\nСкопируй ключ у @BotFather заново (нажми на сам ключ в сообщении) и замени значение. (версия проверки 3)");
 	const bot = "@" + me.result.username;
 
 	await ensureSchema(env.DB);
@@ -234,6 +234,21 @@ async function telegramSelfTest(env) {
 // The secret is meant to be called TELEGRAM_BOT_TOKEN, but accept any dashboard
 // name that mentions Telegram (e.g. TELEGRAM_BOT) as long as the value has the
 // shape of a bot key, so a naming slip does not silently switch notices off.
+// Shape of the stored key, with no characters of it revealed.
+function keyShape(env) {
+	let raw = "";
+	for (const k of Object.keys(env)) if (/telegram|tg_?bot/i.test(k) && typeof env[k] === "string") { raw = env[k]; break; }
+	if (!raw) return "переменной с Telegram в названии нет";
+	const i = raw.indexOf(":");
+	const odd = [...raw].filter((c) => !/[\w:-]/.test(c)).length;
+	const parts = [`всего ${raw.length} симв. (нужно 46)`];
+	if (i < 0) parts.push("двоеточия нет");
+	else parts.push(`до двоеточия ${i} (нужно 10 цифр${/^\d+$/.test(raw.slice(0, i)) ? "" : ", а там не только цифры"})`, `после двоеточия ${raw.length - i - 1} (нужно 35)`);
+	parts.push(odd ? `посторонних знаков (пробел, кавычка, точка и т.п.): ${odd}` : "посторонних знаков нет");
+	if (raw !== raw.trim()) parts.push("есть пробел или перенос строки в начале или в конце");
+	return parts.join("; ");
+}
+
 function botToken(env) {
 	// Pull the key out of the value even if a stray quote, space or dot was pasted around it.
 	const pick = (v) => {
