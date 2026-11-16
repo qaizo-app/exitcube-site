@@ -189,7 +189,17 @@ async function telegramSelfTest(env) {
 	const say = (text) => new Response(text + "\n", { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } });
 	const token = botToken(env);
 	if (!token) {
-		return say("ШАГ 1 — НЕТ КЛЮЧА.\nCloudflare не передал сайту ключ бота. В настройках проекта нет секрета с именем TELEGRAM_BOT_TOKEN (проверь имя буква в букву и что тип — Secret, а не Text).");
+		// Names only, never values: shows what the dashboard actually handed to the site.
+		const shape = /^\d{6,}:[\w-]{30,}$/;
+		const rows = Object.keys(env).map((k) => {
+			const v = env[k];
+			if (typeof v !== "string") return `  ${k} — служебная привязка`;
+			const t = v.trim();
+			return `  ${k} — текст, ${t.length} симв., ${shape.test(t) ? "ПОХОЖЕ на ключ бота" : "на ключ бота НЕ похоже"}`;
+		});
+		return say("ШАГ 1 — НЕТ КЛЮЧА. (версия проверки 2)\nСайт не получил ключ бота. Вот всё, что Cloudflare передал этому проекту (только названия, без значений):\n"
+			+ (rows.length ? rows.join("\n") : "  — ничего —")
+			+ "\n\nКлюч бота выглядит так: цифры, двоеточие, потом около 35 букв и цифр (например 1234567890:AAH...). Он должен лежать в проекте exitcube-site → Settings → Variables and Secrets.");
 	}
 	let me;
 	try {
