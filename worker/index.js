@@ -235,11 +235,20 @@ async function telegramSelfTest(env) {
 // name that mentions Telegram (e.g. TELEGRAM_BOT) as long as the value has the
 // shape of a bot key, so a naming slip does not silently switch notices off.
 function botToken(env) {
-	const shape = /^\d{6,}:[\w-]{30,}$/;
-	if (typeof env.TELEGRAM_BOT_TOKEN === "string" && env.TELEGRAM_BOT_TOKEN.trim()) return env.TELEGRAM_BOT_TOKEN.trim();
+	// Pull the key out of the value even if a stray quote, space or dot was pasted around it.
+	const pick = (v) => {
+		if (typeof v !== "string") return "";
+		const m = v.match(/\d{6,}:[\w-]{30,}/);
+		return m ? m[0] : "";
+	};
+	const direct = pick(env.TELEGRAM_BOT_TOKEN);
+	if (direct) return direct;
 	for (const key of Object.keys(env)) {
-		const v = env[key];
-		if (/telegram|tg_?bot/i.test(key) && typeof v === "string" && shape.test(v.trim())) return v.trim();
+		if (!/telegram|tg_?bot/i.test(key)) continue;
+		const found = pick(env[key]);
+		if (found) return found;
+		// Name says Telegram but the shape is unusual: still try it, Telegram will judge.
+		if (typeof env[key] === "string" && env[key].trim().length > 20) return env[key].trim().replace(/^["'\s]+|["'\s.,;]+$/g, "");
 	}
 	return "";
 }
