@@ -22,7 +22,6 @@ export default {
 	async fetch(request, env, ctx) {
 		const url = new URL(request.url);
 		if (url.pathname === "/api/lead") return handleLead(request, env, ctx);
-		if (url.pathname === "/api/tg-test") return telegramSelfTest(env);
 		if (url.pathname.startsWith("/api/")) return json({ ok: false, error: "not_found" }, 404);
 		return env.ASSETS.fetch(request);
 	},
@@ -181,54 +180,6 @@ async function notifyTelegram(env, db, lead, id) {
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify({ chat_id: chat, text: lines.join("\n"), disable_web_page_preview: true }),
 	});
-}
-
-// Temporary setup helper: open /api/tg-test in a browser to see which step of
-// the Telegram link fails. Shows no secrets. Remove once notifications work.
-async function telegramSelfTest(env) {
-	const say = (text) => new Response(text + "\n", { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } });
-	const token = botToken(env);
-	if (!token) {
-		// Names only, never values: shows what the dashboard actually handed to the site.
-		const shape = /^\d{6,}:[\w-]{30,}$/;
-		const rows = Object.keys(env).map((k) => {
-			const v = env[k];
-			if (typeof v !== "string") return `  ${k} — служебная привязка`;
-			const t = v.trim();
-			return `  ${k} — текст, ${t.length} симв., ${shape.test(t) ? "ПОХОЖЕ на ключ бота" : "на ключ бота НЕ похоже"}`;
-		});
-		return say("ШАГ 1 — НЕТ КЛЮЧА. (версия проверки 2)\nСайт не получил ключ бота. Вот всё, что Cloudflare передал этому проекту (только названия, без значений):\n"
-			+ (rows.length ? rows.join("\n") : "  — ничего —")
-			+ "\n\nКлюч бота выглядит так: цифры, двоеточие, потом около 35 букв и цифр (например 1234567890:AAH...). Он должен лежать в проекте exitcube-site → Settings → Variables and Secrets.");
-	}
-	let me;
-	try {
-		me = await (await fetch(`https://api.telegram.org/bot${token}/getMe`)).json();
-	} catch (e) {
-		return say("ШАГ 2 — Telegram не ответил: " + e.message);
-	}
-	if (!me.ok) return say("ШАГ 2 — КЛЮЧ НЕ ПОДХОДИТ.\nTelegram ответил: " + (me.description || "ошибка") + "\nФорма сохранённого ключа: " + keyShape(env) + ".\nСкопируй ключ у @BotFather заново (нажми на сам ключ в сообщении) и замени значение. (версия проверки 3)");
-	const bot = "@" + me.result.username;
-
-	await ensureSchema(env.DB);
-	let chat;
-	try {
-		chat = await telegramChatId(env, env.DB, token);
-	} catch (e) {
-		return say(`ШАГ 3 — ошибка при поиске получателя (${bot}): ` + e.message);
-	}
-	if (!chat) {
-		return say(`ШАГ 3 — НЕ ЗНАЮ, КОМУ ПИСАТЬ.\nКлюч рабочий, бот ${bot} отвечает, но ему ещё никто не написал.\nОткрой ${bot} в Telegram, отправь ему /start и обнови эту страницу.`);
-	}
-	const r = await (
-		await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({ chat_id: chat, text: "✅ ExitCube: связь с сайтом работает. Сюда будут приходить заявки." }),
-		})
-	).json();
-	if (!r.ok) return say(`ШАГ 4 — НЕ УДАЛОСЬ ОТПРАВИТЬ (${bot}).\nTelegram ответил: ` + (r.description || "ошибка"));
-	return say(`ВСЁ РАБОТАЕТ.\nБот ${bot} только что отправил тебе проверочное сообщение. Заявки с сайта будут приходить туда же.`);
 }
 
 // The secret is meant to be called TELEGRAM_BOT_TOKEN, but accept any dashboard
