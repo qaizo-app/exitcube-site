@@ -3,8 +3,11 @@
 Static site for https://exitcube.co.il. Everything served lives in `public/`.
 
 - `src/page.html` — landing page template
-- `src/strings.json` — all texts, per language (he / ru / en)
-- `src/site.json` — phone and WhatsApp number (change here, then rebuild)
+- `src/trex.html` — Operation T-Rex page (`/t-rex/`, `/ru/t-rex/`, `/en/t-rex/`), uses the landing's CSS
+- `src/strings.json` — all texts, per language (he / ru / en); `{{trex_price}}`,
+  `{{delivery_price}}`, `{{booking_from}}` inside a text are filled from `site.json`
+- `src/site.json` — phone, WhatsApp number, T-Rex price, delivery surcharge and the
+  first bookable date (change here, then rebuild)
 - `tools/build.py` — builds `public/`: one page per language (`/`, `/ru/`, `/en/`),
   privacy and accessibility pages, `sitemap.xml`, `robots.txt`
 
@@ -17,8 +20,12 @@ There is no build step on Cloudflare.
 
 ## Waitlist backend
 
-`worker/index.js` handles `POST /api/lead`: it stores the form in the D1 database
-(binding `DB`, tables are created on first use) and sends a Telegram notice.
+`worker/index.js` handles `POST /api/lead`: it stores the form (incl. party date and
+pick-up/delivery) in the D1 database (binding `DB`, tables and new columns are created
+on first use) and sends a Telegram notice. `GET /api/busy` lists future dates that
+already have a request with status «Бронь» for T-Rex (or «Любая»): there is one box,
+so the form warns when such a date is picked. Mark a request «Бронь» in admin to
+block its date.
 The bot key lives only in Cloudflare (Settings → Runtime variables and secrets,
 not the Build section) — currently named `TELEGRAM_BOT`; any name containing
 "telegram" works. Never commit it.
@@ -52,5 +59,6 @@ To do:
    Open question: show publicly on the site or only in admin. Idea: hide a
    box's counter on the public site until it passes ~10 games.
 4. Batched text fixes, incl. Hebrew headline «שמגיע אליכם» vs «שמגיע עד אליכם».
-5. Later: date / time-of-day fields, booking calendar with slots, pricing by day.
+5. Done 19.11: T-Rex page with prices, date and delivery in the form, busy dates.
+   Later: time of day, online prepayment, deposit and cancellation terms on the page.
 6. Delete test requests №1–3 from admin once real ones arrive.

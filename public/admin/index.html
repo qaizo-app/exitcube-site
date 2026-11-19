@@ -64,6 +64,9 @@ textarea{min-height:64px;resize:vertical;line-height:1.4}
 .when{margin-inline-start:auto}
 .facts{display:flex;flex-wrap:wrap;gap:4px 16px;margin:6px 0 10px;font-size:15px;color:var(--dim)}
 .facts b{color:var(--ink);font-weight:500}
+.date{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 10px;font-size:15px;color:var(--dim)}
+.date input{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 10px;color-scheme:dark}
+.date .clash{color:var(--bad);font-weight:500}
 .acts{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px}
 .acts .wa{background:#12301c;border-color:#1f5a33;color:#8ff0ad}
 .note{margin-top:8px}
@@ -105,6 +108,7 @@ textarea{min-height:64px;resize:vertical;line-height:1.4}
   var ST1={new:"Новая",contacted:"Связался",waiting:"Ждёт запуска",booked:"Бронь",closed:"Закрыта"};
   var $=function(id){return document.getElementById(id)};
   var leads=[],filter="",query="";
+  var ONE_BOX={trex:1,any:1}; // missions played on the single T-Rex box
 
   function api(path,body){
     return fetch("/api/admin/"+path,{method:body?"POST":"GET",credentials:"same-origin",
@@ -151,7 +155,13 @@ textarea{min-height:64px;resize:vertical;line-height:1.4}
     var top=el("div","top");top.append(el("span","name",l.name||"Без имени"),el("span","num","№"+l.id),el("span","when",when(l.created_at)));
     var facts=el("div","facts");
     var city=el("span");city.append("Город ");var cb=el("b",null,l.city||"—");cb.dir="auto";city.append(cb);
-    facts.append(fact("Тел.",l.phone),city,fact("Детей",l.kids==null?"":String(l.kids)),fact("Возраст",l.age),fact("Миссия",l.mission_name),fact("Язык",l.lang_name));
+    facts.append(fact("Тел.",l.phone),city,fact("Детей",l.kids==null?"":String(l.kids)),fact("Возраст",l.age),fact("Миссия",l.mission_name),fact("Получение",l.delivery_name),fact("Язык",l.lang_name));
+    // party date: editable, with a warning when another booking holds the same day
+    var date=el("label","date");date.append("Дата праздника");
+    var din=el("input");din.type="date";din.value=l.event_date||"";din.setAttribute("aria-label","Дата праздника, заявка №"+l.id);
+    date.append(din);
+    var clash=leads.filter(function(x){return x.id!==l.id&&x.status==="booked"&&x.event_date&&x.event_date===l.event_date&&ONE_BOX[x.mission]&&ONE_BOX[l.mission]});
+    if(clash.length)date.append(el("span","clash","Эта дата уже занята: бронь №"+clash.map(function(x){return x.id}).join(", №")));
     var acts=el("div","acts");
     var wa=el("a","btn wa","WhatsApp");wa.href="https://wa.me/"+l.wa;wa.target="_blank";wa.rel="noopener";
     var call=el("a","btn","Позвонить");call.href="tel:"+l.phone;
@@ -168,7 +178,8 @@ textarea{min-height:64px;resize:vertical;line-height:1.4}
       if(!confirm("Удалить заявку №"+l.id+" ("+(l.name||l.phone)+") навсегда? Вернуть будет нельзя."))return;
       api("delete",{id:l.id}).then(function(j){if(j.status===401)return show("login");if(j.ok){leads=leads.filter(function(x){return x.id!==l.id});render()}else flash(false)});
     };
-    c.append(top,facts,acts,note,foot);return c;
+    din.onchange=function(){api("update",{id:l.id,event_date:din.value}).then(function(j){if(j.status===401)return show("login");if(j.ok){l.event_date=din.value||null;render()}else flash(false)})};
+    c.append(top,facts,date,acts,note,foot);return c;
   }
 
   $("getcode").onclick=function(){
@@ -196,8 +207,8 @@ textarea{min-height:64px;resize:vertical;line-height:1.4}
   $("reload").onclick=load;
   $("q").oninput=function(){query=this.value;render()};
   $("csv").onclick=function(){
-    var head=["№","Дата","Имя","Телефон","Город","Детей","Возраст","Миссия","Язык","Статус","Заметка"];
-    var rows=leads.map(function(l){return[l.id,when(l.created_at),l.name,l.phone,l.city,l.kids,l.age,l.mission_name,l.lang_name,ST1[l.status]||l.status,l.note]});
+    var head=["№","Создана","Дата праздника","Имя","Телефон","Город","Детей","Возраст","Миссия","Получение","Язык","Статус","Заметка"];
+    var rows=leads.map(function(l){return[l.id,when(l.created_at),l.event_date?l.event_date.split("-").reverse().join("."):"",l.name,l.phone,l.city,l.kids,l.age,l.mission_name,l.delivery_name,l.lang_name,ST1[l.status]||l.status,l.note]});
     var csv=[head].concat(rows).map(function(r){return r.map(function(v){v=v==null?"":String(v);if(/^[=+\-@]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'}).join(",")}).join("\r\n");
     var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["﻿"+csv],{type:"text/csv"}));a.download="exitcube-zayavki.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
   };

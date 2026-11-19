@@ -129,6 +129,7 @@ nav a:hover{color:#fff}
 .quest p{color:#c9d0cb}
 .specs{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .specs li{font-size:16px;padding:6px 12px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
+.specs li.price{font-weight:700;color:var(--volt);border-color:rgba(255,212,0,.45)}
 .quest .more{align-self:flex-start;margin-top:6px;font-weight:700;color:var(--volt);text-decoration:none;border-bottom:1.5px solid transparent}
 .quest .more:hover{border-bottom-color:var(--volt)}
 .note{color:#8d9791;font-size:16px;margin-top:18px}
@@ -230,7 +231,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
       <a href="#faq">שאלות</a>
     </nav>
     <label class="lang"><select id="lang" aria-label="Language"><option value="he" selected>עברית</option><option value="ru">Русский</option><option value="en">English</option></select></label>
-    <a class="btn sm" href="#book">עדכנו אותי</a>
+    <a class="btn sm" href="#book">להזמנה</a>
   </div>
 </header>
 
@@ -245,9 +246,9 @@ footer span{direction:ltr;unicode-bidi:isolate}
       <div class="inner">
         <span class="pill"><i></i><span>המשימה הראשונה כבר בבנייה</span></span>
         <h1>חדר הבריחה <em>שמגיע</em> אליכם</h1>
-        <p class="sub">חדר בריחה אמיתי בתוך קופסה אחת: חידות, צפנים, אורות ואפקטים. בבית, באולם או בפארק. לילדים בגילאי 7–⁠13.</p>
+        <p class="sub">חדר בריחה אמיתי בתוך קופסה אחת: חידות, צפנים, אורות ואפקטים. בבית, באולם או בפארק. לילדים בגילאי ⁦7–⁠13⁩.</p>
         <div class="ctas">
-          <a class="btn" href="#book">עדכנו אותי בהשקה</a>
+          <a class="btn" href="#book">בחירת תאריך</a>
           <a class="btn ghost" href="#quests">לכל המשימות</a>
         </div>
       </div>
@@ -257,7 +258,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
   <div class="wrap">
     <div class="facts">
       <div><b>מאז 2015</b><span>מחדרי הבריחה הראשונים בישראל</span></div>
-      <div><b>7–13</b><span>גיל המשתתפים</span></div>
+      <div><b dir="ltr">7–13</b><span>גיל המשתתפים</span></div>
       <div><b>3 שפות</b><span>עברית · רוסית · אנגלית</span></div>
     </div>
   </div>
@@ -275,8 +276,8 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <div class="tags"><span class="status">בפיתוח</span><span class="kind">קופסה להשכרה</span></div>
         <h3>מבצע טי־רקס</h3>
         <p>ביצת דינוזאור נדירה עומדת לבקוע. הסוכנים פותרים חידות וצפנים כדי לעזור לה לבקוע: עם אור, ערפל ושאגה. הדינוזאור הקטן נשאר אצל ילד יום ההולדת.</p>
-        <ul class="specs"><li>5–⁠6 ילדים</li><li>מפעילים בעצמכם</li><li>רמזים בטלפון</li></ul>
-        <a class="more" href="#book" data-pick="trex">עדכנו אותי בהשקה ←</a>
+        <ul class="specs"><li class="price">החל מ־450 ₪</li><li>⁦5–⁠6⁩ ילדים</li><li>מפעילים בעצמכם</li><li>רמזים בטלפון</li></ul>
+        <a class="more" href="/t-rex/">פרטים ומחירים ←</a>
       </div>
     </article>
 
@@ -297,7 +298,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <div class="tags"><span class="status next">הבאות בתור</span><span class="kind">קופסה להשכרה</span></div>
         <h3>משימות הקסם</h3>
         <p>״גביע הקסם״, האגדה של Exit Game, חוזר כקופסה: שרביטים, לחשים ושיקויים. אחריו מגיעה ״האקדמיה לקוסמות צעירות״ עם שיעור שיקויים.</p>
-        <ul class="specs"><li>5–⁠6 ילדים</li><li>מפעילים בעצמכם</li></ul>
+        <ul class="specs"><li>⁦5–⁠6⁩ ילדים</li><li>מפעילים בעצמכם</li></ul>
         <a class="more" href="#book" data-pick="magic">עדכנו אותי בהשקה ←</a>
       </div>
     </article>
@@ -357,7 +358,8 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <h2>בקצרה, מה שחשוב</h2>
       </div>
       <div class="faq rv">
-        <details><summary>מתי אפשר יהיה להזמין?</summary><p>המשימות הראשונות נמצאות כעת בבנייה. השאירו פרטים ונכתוב לכם ברגע שנפתח הזמנות.</p></details>
+        <details><summary>מתי אפשר יהיה להזמין?</summary><p>ההזמנות ל״מבצע טי־רקס״ פתוחות לתאריכים החל מ־10.01.2027. בחרו תאריך בטופס ונאשר את ההזמנה בוואטסאפ. שאר המשימות עדיין בבנייה.</p></details>
+        <details><summary>כמה זה עולה?</summary><p>״מבצע טי־רקס״: 450 ₪ למשחק באיסוף עצמי מאשדוד. משלוח והחזרה של הקופסה: 100 ₪ נוספים.</p></details>
         <details><summary>כמה מקום צריך?</summary><p>לקופסה מספיק חדר אחד. למשחק שש הקוביות צריך שלושה שולחנות בחדר או בשטח פתוח.</p></details>
         <details><summary>אפשר לשחק בחוץ?</summary><p>כן. הקופסאות והקוביות פועלות על סוללות משלהן, כך שגם פארק מתאים.</p></details>
         <details><summary>זה בטוח?</summary><p>מתח נמוך של 12 וולט, וכל האלקטרוניקה סגורה בתוך המארז.</p></details>
@@ -369,14 +371,17 @@ footer span{direction:ltr;unicode-bidi:isolate}
 
   <section id="book" class="sec wrap" style="padding-bottom:0">
     <div class="sec-head rv">
-      <span class="kicker">השארת פרטים</span>
-      <h2>היו הראשונים לדעת על ההשקה</h2>
-      <p>השאירו טלפון: נשמור את הפרטים ונפתח וואטסאפ עם הודעה מוכנה.</p>
+      <span class="kicker">הזמנה</span>
+      <h2>בחרו את תאריך המסיבה</h2>
+      <p>מלאו את הטופס: נשמור את הפרטים ונפתח וואטסאפ עם הודעה מוכנה. אנחנו מאשרים כל הזמנה באופן אישי, בדרך כלל באותו יום.</p>
     </div>
     <div class="book rv">
       <form class="form" id="form" novalidate>
         <div class="field"><label for="f-name">שם ההורה</label><input id="f-name" autocomplete="name"></div>
         <div class="field"><label for="f-phone">טלפון</label><input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required></div>
+        <div class="field"><label for="f-date">תאריך המסיבה</label><input id="f-date" type="date" min="2027-01-10"></div>
+        <div class="field"><label for="f-dlv">איך מקבלים את הקופסה</label>
+          <select id="f-dlv"><option value="pickup">איסוף עצמי, אשדוד</option><option value="delivery">משלוח ואיסוף (+100 ₪)</option></select></div>
         <div class="field"><label for="f-city">עיר</label><input id="f-city" autocomplete="address-level2"></div>
         <div class="field"><label for="f-kids">מספר ילדים</label><input id="f-kids" type="number" min="1" max="30" inputmode="numeric"></div>
         <div class="field"><label for="f-age">גיל</label>
@@ -384,7 +389,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <div class="field"><label for="f-msn">איזו משימה מעניינת אתכם</label>
           <select id="f-msn"><option value="any">כל משימה</option><option value="trex">מבצע טי־רקס</option><option value="space">סוכנים בחלל</option><option value="magic">משימות הקסם</option></select></div>
         <input class="hp" id="f-web" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label class="consent full"><input id="f-ok" type="checkbox"><span>אני מאשר/ת לקבל עדכון על ההשקה של ExitCube. <a href="/privacy/">מדיניות פרטיות</a></span></label>
+        <label class="consent full"><input id="f-ok" type="checkbox"><span>אני מאשר/ת ש־ExitCube תיצור איתי קשר בנוגע לפנייה זו. <a href="/privacy/">מדיניות פרטיות</a></span></label>
         <div class="full"><a class="btn" id="send" href="https://wa.me/972586995577" target="_blank" rel="noopener">שליחה בוואטסאפ</a>
           <p class="fstatus" id="fstatus" role="status" aria-live="polite"></p></div>
       </form>
@@ -400,7 +405,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
 <footer><div class="wrap"><span>© 2026 ExitCube</span><nav class="flinks"><a href="/privacy/">מדיניות פרטיות</a><a href="/accessibility/">הצהרת נגישות</a></nav></div></footer>
 
 <script>
-const L={"msg": ["שלום! אשמח לעדכון כש-ExitCube יושק.", "משימה", "ילדים", "גיל", "עיר", "שם"], "age_mix": "מעורב", "err_phone": "נא למלא מספר טלפון כדי שנוכל לחזור אליכם.", "err_consent": "נא לסמן את האישור, בלעדיו לא נוכל לכתוב לכם.", "saved": "הפרטים נשמרו. נעדכן אתכם בהשקה.", "save_fail": "לא הצלחנו לשמור את הפרטים. שלחו את ההודעה בוואטסאפ ונקבל אותה.", "msn": {"any": "כל משימה", "trex": "מבצע טי־רקס", "space": "סוכנים בחלל", "magic": "משימות הקסם"}};
+const L={"msg": ["שלום! אשמח להזמין את ExitCube.", "משימה", "ילדים", "גיל", "עיר", "שם", "תאריך", "קבלה"], "age_mix": "מעורב", "err_phone": "נא למלא מספר טלפון כדי שנוכל לחזור אליכם.", "err_consent": "נא לסמן את האישור, בלעדיו לא נוכל לכתוב לכם.", "saved": "הפרטים נשמרו. נכתוב לכם כדי לאשר את התאריך.", "save_fail": "לא הצלחנו לשמור את הפרטים. שלחו את ההודעה בוואטסאפ ונקבל אותה.", "date_busy": "הקופסה כבר מוזמנת לתאריך הזה. בחרו תאריך אחר או שלחו את הפנייה ונציע אפשרויות.", "err_date": "ההזמנות פתוחות לתאריכים החל מ־10.01.2027.", "dlv": {"pickup": "איסוף עצמי, אשדוד", "delivery": "משלוח ואיסוף (+100 ₪)"}, "msn": {"any": "כל משימה", "trex": "מבצע טי־רקס", "space": "סוכנים בחלל", "magic": "משימות הקסם"}};
 const PHONE="972586995577";
 const $=s=>document.querySelector(s);
 
@@ -415,12 +420,29 @@ function buildLink(){
   lines.push(`${m[3]}: ${age}`);
   if(v("#f-city"))lines.push(`${m[4]}: ${v("#f-city")}`);
   if(v("#f-name"))lines.push(`${m[5]}: ${v("#f-name")}`);
+  if(v("#f-date"))lines.splice(2,0,`${m[6]}: ${v("#f-date").split("-").reverse().join(".")}`,`${m[7]}: ${L.dlv[$("#f-dlv").value]}`);
   $("#send").href=`https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join("\n"))}`;
 }
 $("#form").addEventListener("input",buildLink);
 $("#form").addEventListener("change",buildLink);
 $("#form").addEventListener("submit",e=>e.preventDefault());
 document.querySelectorAll("[data-pick]").forEach(a=>a.addEventListener("click",()=>{$("#f-msn").value=a.dataset.pick;buildLink();}));
+// a mission page links here as ?m=trex#book
+{const m=new URLSearchParams(location.search).get("m");if(m&&L.msn[m])$("#f-msn").value=m;}
+
+// One box, one game a day: warn when the chosen date is already booked.
+{const t=new Date(Date.now()+864e5).toISOString().slice(0,10);if(t>$("#f-date").min)$("#f-date").min=t;}
+let busy=[];
+const dateOk=()=>{const d=$("#f-date").value;return !d||d>=$("#f-date").min;};
+const checkDate=()=>{
+  $("#f-date").classList.toggle("bad",!dateOk());
+  if(!dateOk())return status(L.err_date,"err");
+  const taken=busy.includes($("#f-date").value)&&["trex","any"].includes($("#f-msn").value);
+  status(taken?L.date_busy:"",taken?"err":"");
+};
+$("#f-date").addEventListener("change",checkDate);
+$("#f-msn").addEventListener("change",()=>{if($("#f-date").value)checkDate();});
+fetch("/api/busy").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.dates){busy=j.dates;if($("#f-date").value)checkDate();}}).catch(()=>{});
 
 // Save the request on our side first, so it is not lost if the visitor never
 // presses "send" inside WhatsApp. The link itself still opens WhatsApp.
@@ -429,8 +451,9 @@ $("#f-phone").addEventListener("input",()=>$("#f-phone").classList.remove("bad")
 $("#send").addEventListener("click",e=>{
   const phone=$("#f-phone").value.trim(),digits=phone.replace(/\D/g,"");
   if(digits.length<9||digits.length>15){e.preventDefault();$("#f-phone").classList.add("bad");$("#f-phone").focus();status(L.err_phone,"err");return;}
+  if(!dateOk()){e.preventDefault();$("#f-date").focus();status(L.err_date,"err");return;}
   if(!$("#f-ok").checked){e.preventDefault();$("#f-ok").focus();status(L.err_consent,"err");return;}
-  const body=JSON.stringify({name:$("#f-name").value,phone,city:$("#f-city").value,kids:$("#f-kids").value,age:$("#f-age").value,mission:$("#f-msn").value,lang:document.documentElement.lang,consent:true,website:$("#f-web").value});
+  const body=JSON.stringify({name:$("#f-name").value,phone,city:$("#f-city").value,kids:$("#f-kids").value,age:$("#f-age").value,mission:$("#f-msn").value,date:$("#f-date").value,delivery:$("#f-dlv").value,lang:document.documentElement.lang,consent:true,website:$("#f-web").value});
   fetch("/api/lead",{method:"POST",headers:{"content-type":"application/json"},body,keepalive:true})
     .then(r=>r.ok?status(L.saved,"ok"):status(L.save_fail,"err"))
     .catch(()=>status(L.save_fail,"err"));

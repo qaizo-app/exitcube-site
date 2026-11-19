@@ -1,5 +1,8 @@
 {
   "phone_display": "058-699-5577",
   "tel": "+972586995577",
-  "whatsapp": "972586995577"
+  "whatsapp": "972586995577",
+  "trex_price": 450,
+  "delivery_price": 100,
+  "booking_from": "2027-01-10"
 }

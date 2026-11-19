@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://exitcube.co.il/</loc></url>
+  <url><loc>https://exitcube.co.il/t-rex/</loc></url>
   <url><loc>https://exitcube.co.il/privacy/</loc></url>
   <url><loc>https://exitcube.co.il/accessibility/</loc></url>
   <url><loc>https://exitcube.co.il/ru/</loc></url>
+  <url><loc>https://exitcube.co.il/ru/t-rex/</loc></url>
   <url><loc>https://exitcube.co.il/ru/privacy/</loc></url>
   <url><loc>https://exitcube.co.il/ru/accessibility/</loc></url>
   <url><loc>https://exitcube.co.il/en/</loc></url>
+  <url><loc>https://exitcube.co.il/en/t-rex/</loc></url>
   <url><loc>https://exitcube.co.il/en/privacy/</loc></url>
   <url><loc>https://exitcube.co.il/en/accessibility/</loc></url>
 </urlset>

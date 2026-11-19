@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Builds the static ExitCube site into public/.
 
-Sources:  src/page.html (landing template), src/strings.json (texts per language),
-          src/site.json (phone etc.), and the legal texts below.
-Output:   public/index.html (Hebrew), public/ru/, public/en/, legal pages,
-          sitemap.xml, robots.txt.  Run:  python3 tools/build.py
+Sources:  src/page.html (landing template), src/trex.html (T-Rex mission page),
+          src/strings.json (texts per language), src/site.json (phone, prices,
+          first bookable date), and the legal texts below.
+Output:   public/index.html (Hebrew), public/ru/, public/en/, the T-Rex page
+          (/t-rex/, /ru/t-rex/, /en/t-rex/), legal pages, sitemap.xml, robots.txt.
+          Run:  python3 tools/build.py
 """
 import json, re, html
 from pathlib import Path
@@ -16,13 +18,21 @@ LANGS = ["he", "ru", "en"]
 HOME = {"he": "/", "ru": "/ru/", "en": "/en/"}
 LOCALE = {"he": "he_IL", "ru": "ru_RU", "en": "en_US"}
 FONT = {"he": "rubik-hebrew-wght-normal.woff2", "ru": "rubik-cyrillic-wght-normal.woff2", "en": "rubik-latin-wght-normal.woff2"}
-UPDATED = "15.11.2026"
+UPDATED = "19.11.2026"
 _TA = "/Attraction_Review-g1137841-d7751597-Reviews-ExitGame_Israel_LTD-Ashdod_Southern_District.html"
 TRIPADVISOR = {"he": "https://www.tripadvisor.co.il" + _TA, "ru": "https://www.tripadvisor.ru" + _TA, "en": "https://www.tripadvisor.com" + _TA}
 
 T = json.loads((ROOT / "src/strings.json").read_text(encoding="utf8"))
 SITE = json.loads((ROOT / "src/site.json").read_text(encoding="utf8"))
 PAGE = (ROOT / "src/page.html").read_text(encoding="utf8")
+TREX = (ROOT / "src/trex.html").read_text(encoding="utf8")
+# The mission page reuses the landing's styles, so both always look alike.
+CSS = re.search(r"<style>\n(.*?)</style>", PAGE, re.S).group(1)
+_y, _m, _d = SITE["booking_from"].split("-")
+# Prices and the first bookable date can appear inside any text as {{trex_price}} etc.
+COMMON = {"trex_price": str(SITE["trex_price"]), "delivery_price": str(SITE["delivery_price"]),
+          "full_price": str(SITE["trex_price"] + SITE["delivery_price"]),
+          "booking_from": f"{_d}.{_m}.{_y}", "date_min": SITE["booking_from"]}
 
 ALT = {
     "he": {"hero": "ילדים מושיטים ידיים אל ביצת דינוזאור זוהרת בתוך קופסת משימה", "m1": "ביצת דינוזאור זוהרת בקופסת המשימה", "m2": "קוביות משימה עם אשנבים ירוקים זוהרים", "m3": "תיבת קסמים עם גביע זוהר ושיקויים"},
@@ -34,8 +44,8 @@ LEGAL = {
     "privacy": {
         "he": ("מדיניות פרטיות", [
             ("מי אנחנו", "ExitCube מפעילה חדרי בריחה ניידים לימי הולדת, מאשדוד. לכל שאלה בנושא פרטיות אפשר לפנות אלינו בטלפון או בוואטסאפ: {phone}."),
-            ("איזה מידע נאסף", "האתר אינו דורש הרשמה. כשאתם שולחים את הטופס, אנחנו שומרים את מה שמילאתם: שם, טלפון, עיר, מספר הילדים, גילם והמשימה שמעניינת אתכם. הטופס נשלח רק לאחר שסימנתם את האישור. אם תשלחו גם את הודעת הוואטסאפ, נראה אותה ואת מספר הטלפון שלכם."),
-            ("למה אנחנו משתמשים במידע", "כדי לחזור אליכם בנוגע להשקה ולהזמנות. איננו מוכרים ואיננו מעבירים את הפרטים לגורמים אחרים."),
+            ("איזה מידע נאסף", "האתר אינו דורש הרשמה. כשאתם שולחים את הטופס, אנחנו שומרים את מה שמילאתם: שם, טלפון, עיר, מספר הילדים, גילם, המשימה שמעניינת אתכם, תאריך המסיבה ואופן קבלת הקופסה. הטופס נשלח רק לאחר שסימנתם את האישור. אם תשלחו גם את הודעת הוואטסאפ, נראה אותה ואת מספר הטלפון שלכם."),
+            ("למה אנחנו משתמשים במידע", "כדי לחזור אליכם בנוגע להזמנה. איננו מוכרים ואיננו מעבירים את הפרטים לגורמים אחרים."),
             ("עוגיות ומעקב", "האתר אינו משתמש בעוגיות פרסום או מעקב."),
             ("איפה המידע נשמר", "האתר ומאגר הפניות מתארחים אצל Cloudflare, ששומרת גם נתונים טכניים (כמו כתובת IP) לצורכי אבטחה ותפעול. הודעה על כל פנייה חדשה נשלחת אלינו בטלגרם."),
             ("ילדים", "האתר מיועד להורים. איננו אוספים ביודעין מידע מילדים."),
@@ -44,8 +54,8 @@ LEGAL = {
         ]),
         "ru": ("Политика конфиденциальности", [
             ("Кто мы", "ExitCube проводит мобильные квесты на дни рождения, мы работаем из Ашдода. По вопросам конфиденциальности пишите или звоните: {phone}."),
-            ("Какие данные собираются", "Сайт не требует регистрации. Когда вы отправляете форму, мы сохраняем то, что вы в ней указали: имя, телефон, город, число детей, их возраст и интересующую миссию. Форма отправляется только после того, как вы отметили согласие. Если вы отправите ещё и сообщение в WhatsApp, мы увидим его текст и ваш номер."),
-            ("Зачем нам эти данные", "Чтобы ответить вам о запуске и бронировании. Мы не продаём и не передаём ваши данные третьим лицам."),
+            ("Какие данные собираются", "Сайт не требует регистрации. Когда вы отправляете форму, мы сохраняем то, что вы в ней указали: имя, телефон, город, число детей, их возраст, интересующую миссию, дату праздника и способ получения бокса. Форма отправляется только после того, как вы отметили согласие. Если вы отправите ещё и сообщение в WhatsApp, мы увидим его текст и ваш номер."),
+            ("Зачем нам эти данные", "Чтобы ответить вам по заявке и бронированию. Мы не продаём и не передаём ваши данные третьим лицам."),
             ("Cookie и отслеживание", "Сайт не использует рекламные и отслеживающие cookie."),
             ("Где хранятся данные", "Сайт и база заявок размещены в Cloudflare, который хранит также технические данные (например, IP-адрес) для безопасности и работы сервиса. Уведомление о каждой новой заявке приходит нам в Telegram."),
             ("Дети", "Сайт предназначен для родителей. Мы сознательно не собираем данные детей."),
@@ -54,8 +64,8 @@ LEGAL = {
         ]),
         "en": ("Privacy policy", [
             ("Who we are", "ExitCube runs mobile escape games for birthday parties, based in Ashdod, Israel. For privacy questions, call or message us: {phone}."),
-            ("What is collected", "The site needs no sign-up. When you send the form, we store what you entered: name, phone, city, number of kids, their age and the mission you are interested in. The form is sent only after you tick the consent box. If you also send the WhatsApp message, we see its text and your phone number."),
-            ("How we use it", "To reply to you about the launch and bookings. We do not sell or pass your details to anyone else."),
+            ("What is collected", "The site needs no sign-up. When you send the form, we store what you entered: name, phone, city, number of kids, their age, the mission you are interested in, the party date and how you want to get the box. The form is sent only after you tick the consent box. If you also send the WhatsApp message, we see its text and your phone number."),
+            ("How we use it", "To reply to you about your request and booking. We do not sell or pass your details to anyone else."),
             ("Cookies and tracking", "The site uses no advertising or tracking cookies."),
             ("Where it is kept", "The site and the list of requests are hosted by Cloudflare, which also keeps technical data (such as IP addresses) for security and operations. A notice about each new request reaches us on Telegram."),
             ("Children", "The site is meant for parents. We do not knowingly collect information from children."),
@@ -152,20 +162,29 @@ def write(rel, text):
     p.write_text(text, encoding="utf8")
 
 
-def build_landing(lang):
+def render(tpl, lang, vals):
+    """Fills data-i18n slots, {{s:key}} attributes and {{placeholders}} of a page template."""
     d = T[lang]
-    s = PAGE
 
     def fill(m):
         open_tag, key = m.group(1), m.group(4)
         open_tag = open_tag.replace(f' data-i18n="{key}"', "")
-        # word joiner keeps ranges like 7–13 on one line
-        return open_tag + re.sub(r'(\d)–(\d)', '\\1–\u2060\\2', d[key]) + m.group(6)
+        # word joiner keeps ranges like 7–13 on one line; the LTR isolate keeps
+        # them reading 7–13 (not 13–7) inside Hebrew text
+        return open_tag + re.sub(r'(\d+)–(\d+)', '\u2066\\1–\u2060\\2\u2069', d[key]) + m.group(6)
 
-    s, n = re.subn(r'(<(\w+)([^>]*?) data-i18n="(\w+)"([^>]*)>)(</\2>)', fill, s)
+    s, n = re.subn(r'(<(\w+)([^>]*?) data-i18n="(\w+)"([^>]*)>)(</\2>)', fill, tpl)
     assert "data-i18n" not in s, "unfilled text slot"
     s = re.sub(r"\{\{s:(\w+)\}\}", lambda m: html.escape(d[m.group(1)], quote=True), s)
     s = s.replace(f'<option value="{lang}">', f'<option value="{lang}" selected>')
+    for k, v in {**vals, **COMMON}.items():
+        s = s.replace("{{" + k + "}}", v)
+    assert "{{" not in s, "unfilled placeholder: " + re.search(r"\{\{\w*", s).group(0)
+    return s
+
+
+def build_landing(lang):
+    d = T[lang]
     jsonld = {
         "@context": "https://schema.org", "@type": "EntertainmentBusiness",
         "name": "ExitCube", "url": BASE + HOME[lang], "description": d["desc"],
@@ -175,7 +194,8 @@ def build_landing(lang):
         "availableLanguage": ["he", "ru", "en"], "foundingDate": "2015",
     }
     L = {"msg": d["msg"], "age_mix": d["age_mix"], "err_phone": d["err_phone"], "err_consent": d["err_consent"],
-         "saved": d["saved"], "save_fail": d["save_fail"],
+         "saved": d["saved"], "save_fail": d["save_fail"], "date_busy": d["date_busy"], "err_date": d["err_date"],
+         "dlv": {"pickup": d["o_pick"], "delivery": d["o_dlv"]},
          "msn": {"any": d["o_any"], "trex": d["m1_t"], "space": d["m2_t"], "magic": d["m3_t"]}}
     vals = {
         "lang": lang, "dir": "rtl" if lang == "he" else "ltr", "title": html.escape(d["title"]),
@@ -187,10 +207,34 @@ def build_landing(lang):
         "alt_hero": html.escape(ALT[lang]["hero"], quote=True), "alt_m1": html.escape(ALT[lang]["m1"], quote=True),
         "alt_m2": html.escape(ALT[lang]["m2"], quote=True), "alt_m3": html.escape(ALT[lang]["m3"], quote=True),
     }
-    for k, v in vals.items():
-        s = s.replace("{{" + k + "}}", v)
-    assert "{{" not in s, "unfilled placeholder"
+    s = render(PAGE, lang, vals)
     write(HOME[lang].strip("/") + ("/" if lang != "he" else "") + "index.html", s)
+
+
+def build_trex(lang):
+    d = T[lang]
+    url = f"{BASE}{HOME[lang]}t-rex/"
+    plain = lambda k: re.sub(r"<[^>]+>", "", d[k])
+    desc = d["t_desc"]
+    for k, v in COMMON.items():
+        desc = desc.replace("{{" + k + "}}", v)
+    jsonld = {
+        "@context": "https://schema.org", "@type": "Product", "name": plain("t_h1"),
+        "description": desc, "image": BASE + "/img/trex-m.jpg", "url": url,
+        "brand": {"@type": "Brand", "name": "ExitCube"},
+        "offers": {"@type": "Offer", "price": SITE["trex_price"], "priceCurrency": "ILS",
+                   "availability": "https://schema.org/PreOrder", "url": url},
+    }
+    vals = {
+        "lang": lang, "dir": "rtl" if lang == "he" else "ltr", "title": html.escape(d["t_title"]),
+        "desc": html.escape(desc, quote=True), "url": url, "alternates": alternates("t-rex/"),
+        "locale": LOCALE[lang], "font": FONT[lang], "home": HOME[lang], "css": CSS,
+        "book": HOME[lang] + "?m=trex#book",
+        "jsonld": json.dumps(jsonld, ensure_ascii=False),
+        "tel": SITE["tel"], "phone": SITE["phone_display"],
+        "alt_hero": html.escape(ALT[lang]["hero"], quote=True),
+    }
+    write(f"{HOME[lang].strip('/')}/t-rex/index.html".lstrip("/"), render(TREX, lang, vals))
 
 
 def build_legal(kind, lang):
@@ -209,6 +253,8 @@ def main():
     for lang in LANGS:
         build_landing(lang)
         urls.append(BASE + HOME[lang])
+        build_trex(lang)
+        urls.append(f"{BASE}{HOME[lang]}t-rex/")
         for kind in LEGAL:
             build_legal(kind, lang)
             urls.append(f"{BASE}{HOME[lang]}{kind}/")

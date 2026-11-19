@@ -129,6 +129,7 @@ nav a:hover{color:#fff}
 .quest p{color:#c9d0cb}
 .specs{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .specs li{font-size:16px;padding:6px 12px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
+.specs li.price{font-weight:700;color:var(--volt);border-color:rgba(255,212,0,.45)}
 .quest .more{align-self:flex-start;margin-top:6px;font-weight:700;color:var(--volt);text-decoration:none;border-bottom:1.5px solid transparent}
 .quest .more:hover{border-bottom-color:var(--volt)}
 .note{color:#8d9791;font-size:16px;margin-top:18px}
@@ -230,7 +231,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
       <a href="#faq">Вопросы</a>
     </nav>
     <label class="lang"><select id="lang" aria-label="Language"><option value="he">עברית</option><option value="ru" selected>Русский</option><option value="en">English</option></select></label>
-    <a class="btn sm" href="#book">Узнать первым</a>
+    <a class="btn sm" href="#book">Забронировать</a>
   </div>
 </header>
 
@@ -245,9 +246,9 @@ footer span{direction:ltr;unicode-bidi:isolate}
       <div class="inner">
         <span class="pill"><i></i><span>Первая миссия уже в сборке</span></span>
         <h1>Квест, который <em>приезжает</em> к вам</h1>
-        <p class="sub">Настоящий квест в одном боксе: загадки, шифры, свет и спецэффекты. Дома, в зале или в парке. Для детей 7–⁠13 лет.</p>
+        <p class="sub">Настоящий квест в одном боксе: загадки, шифры, свет и спецэффекты. Дома, в зале или в парке. Для детей ⁦7–⁠13⁩ лет.</p>
         <div class="ctas">
-          <a class="btn" href="#book">Узнать о запуске первым</a>
+          <a class="btn" href="#book">Выбрать дату</a>
           <a class="btn ghost" href="#quests">Смотреть миссии</a>
         </div>
       </div>
@@ -257,7 +258,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
   <div class="wrap">
     <div class="facts">
       <div><b>С 2015</b><span>одни из первых квестов в Израиле</span></div>
-      <div><b>7–13</b><span>возраст игроков</span></div>
+      <div><b dir="ltr">7–13</b><span>возраст игроков</span></div>
       <div><b>3 языка</b><span>иврит · русский · английский</span></div>
     </div>
   </div>
@@ -275,8 +276,8 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <div class="tags"><span class="status">В разработке</span><span class="kind">Бокс в аренду</span></div>
         <h3>Операция Т-Рекс</h3>
         <p>Редкое яйцо динозавра вот-вот вылупится. Агенты решают загадки и шифры, чтобы помочь ему появиться на свет: со светом, туманом и рёвом. Динозаврик остаётся имениннику.</p>
-        <ul class="specs"><li>5–⁠6 детей</li><li>проводите сами</li><li>подсказки в телефоне</li></ul>
-        <a class="more" href="#book" data-pick="trex">Сообщить о запуске →</a>
+        <ul class="specs"><li class="price">от 450 ₪</li><li>⁦5–⁠6⁩ детей</li><li>проводите сами</li><li>подсказки в телефоне</li></ul>
+        <a class="more" href="/ru/t-rex/">Подробнее и цены →</a>
       </div>
     </article>
 
@@ -297,7 +298,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <div class="tags"><span class="status next">Следующие</span><span class="kind">Бокс в аренду</span></div>
         <h3>Волшебные миссии</h3>
         <p>«Кубок магии», легенда Exit Game, возвращается в виде бокса: палочки, заклинания и зелья. За ним идёт «Академия юных волшебниц» с уроком зельеварения.</p>
-        <ul class="specs"><li>5–⁠6 детей</li><li>проводите сами</li></ul>
+        <ul class="specs"><li>⁦5–⁠6⁩ детей</li><li>проводите сами</li></ul>
         <a class="more" href="#book" data-pick="magic">Сообщить о запуске →</a>
       </div>
     </article>
@@ -357,7 +358,8 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <h2>Коротко о главном</h2>
       </div>
       <div class="faq rv">
-        <details><summary>Когда можно будет заказать?</summary><p>Первые миссии сейчас в сборке. Оставьте заявку, и мы напишем вам, как только откроем бронирование.</p></details>
+        <details><summary>Когда можно будет заказать?</summary><p>Бронирование «Операции Т-Рекс» открыто на даты с 10.01.2027. Выберите дату в заявке, и мы подтвердим бронь в WhatsApp. Остальные миссии пока в сборке.</p></details>
+        <details><summary>Сколько стоит?</summary><p>«Операция Т-Рекс»: 450 ₪ за игру при самовывозе в Ашдоде. Доставка и возврат бокса: +100 ₪.</p></details>
         <details><summary>Сколько нужно места?</summary><p>Для бокса хватит одной комнаты. Для игры на шести кубах нужны три стола в комнате или на открытой площадке.</p></details>
         <details><summary>Можно играть на улице?</summary><p>Да. Боксы и кубы работают от собственных аккумуляторов, так что подойдёт и парк.</p></details>
         <details><summary>Это безопасно?</summary><p>Питание низковольтное, 12 В. Вся электроника закрыта внутри корпуса.</p></details>
@@ -369,14 +371,17 @@ footer span{direction:ltr;unicode-bidi:isolate}
 
   <section id="book" class="sec wrap" style="padding-bottom:0">
     <div class="sec-head rv">
-      <span class="kicker">Заявка</span>
-      <h2>Узнайте о запуске первыми</h2>
-      <p>Оставьте телефон: мы сохраним заявку и откроем WhatsApp с готовым сообщением.</p>
+      <span class="kicker">Бронирование</span>
+      <h2>Выберите дату праздника</h2>
+      <p>Заполните заявку: мы сохраним её и откроем WhatsApp с готовым сообщением. Бронь подтверждаем лично, обычно в тот же день.</p>
     </div>
     <div class="book rv">
       <form class="form" id="form" novalidate>
         <div class="field"><label for="f-name">Имя родителя</label><input id="f-name" autocomplete="name"></div>
         <div class="field"><label for="f-phone">Телефон</label><input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required></div>
+        <div class="field"><label for="f-date">Дата праздника</label><input id="f-date" type="date" min="2027-01-10"></div>
+        <div class="field"><label for="f-dlv">Как получить бокс</label>
+          <select id="f-dlv"><option value="pickup">Самовывоз, Ашдод</option><option value="delivery">Доставка и возврат (+100 ₪)</option></select></div>
         <div class="field"><label for="f-city">Город</label><input id="f-city" autocomplete="address-level2"></div>
         <div class="field"><label for="f-kids">Сколько детей</label><input id="f-kids" type="number" min="1" max="30" inputmode="numeric"></div>
         <div class="field"><label for="f-age">Возраст</label>
@@ -384,7 +389,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <div class="field"><label for="f-msn">Какая миссия интересна</label>
           <select id="f-msn"><option value="any">Любая</option><option value="trex">Операция Т-Рекс</option><option value="space">Космические агенты</option><option value="magic">Волшебные миссии</option></select></div>
         <input class="hp" id="f-web" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label class="consent full"><input id="f-ok" type="checkbox"><span>Согласен(на) получить сообщение о запуске ExitCube. <a href="/ru/privacy/">Конфиденциальность</a></span></label>
+        <label class="consent full"><input id="f-ok" type="checkbox"><span>Согласен(на), чтобы ExitCube связался со мной по этой заявке. <a href="/ru/privacy/">Конфиденциальность</a></span></label>
         <div class="full"><a class="btn" id="send" href="https://wa.me/972586995577" target="_blank" rel="noopener">Отправить в WhatsApp</a>
           <p class="fstatus" id="fstatus" role="status" aria-live="polite"></p></div>
       </form>
@@ -400,7 +405,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
 <footer><div class="wrap"><span>© 2026 ExitCube</span><nav class="flinks"><a href="/ru/privacy/">Конфиденциальность</a><a href="/ru/accessibility/">Доступность</a></nav></div></footer>
 
 <script>
-const L={"msg": ["Здравствуйте! Сообщите мне, когда ExitCube запустится.", "Миссия", "Детей", "Возраст", "Город", "Имя"], "age_mix": "Смешанный", "err_phone": "Укажите телефон, чтобы мы могли вам написать.", "err_consent": "Отметьте согласие, без него мы не сможем вам написать.", "saved": "Заявка сохранена. Мы напишем вам о запуске.", "save_fail": "Не удалось сохранить заявку. Отправьте сообщение в WhatsApp, и мы его получим.", "msn": {"any": "Любая", "trex": "Операция Т-Рекс", "space": "Космические агенты", "magic": "Волшебные миссии"}};
+const L={"msg": ["Здравствуйте! Хочу забронировать ExitCube.", "Миссия", "Детей", "Возраст", "Город", "Имя", "Дата", "Получение"], "age_mix": "Смешанный", "err_phone": "Укажите телефон, чтобы мы могли вам написать.", "err_consent": "Отметьте согласие, без него мы не сможем вам написать.", "saved": "Заявка сохранена. Мы напишем вам, чтобы подтвердить дату.", "save_fail": "Не удалось сохранить заявку. Отправьте сообщение в WhatsApp, и мы его получим.", "date_busy": "На эту дату бокс уже забронирован. Выберите другую дату или отправьте заявку, и мы предложим варианты.", "err_date": "Бронирование открыто на даты с 10.01.2027.", "dlv": {"pickup": "Самовывоз, Ашдод", "delivery": "Доставка и возврат (+100 ₪)"}, "msn": {"any": "Любая", "trex": "Операция Т-Рекс", "space": "Космические агенты", "magic": "Волшебные миссии"}};
 const PHONE="972586995577";
 const $=s=>document.querySelector(s);
 
@@ -415,12 +420,29 @@ function buildLink(){
   lines.push(`${m[3]}: ${age}`);
   if(v("#f-city"))lines.push(`${m[4]}: ${v("#f-city")}`);
   if(v("#f-name"))lines.push(`${m[5]}: ${v("#f-name")}`);
+  if(v("#f-date"))lines.splice(2,0,`${m[6]}: ${v("#f-date").split("-").reverse().join(".")}`,`${m[7]}: ${L.dlv[$("#f-dlv").value]}`);
   $("#send").href=`https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join("\n"))}`;
 }
 $("#form").addEventListener("input",buildLink);
 $("#form").addEventListener("change",buildLink);
 $("#form").addEventListener("submit",e=>e.preventDefault());
 document.querySelectorAll("[data-pick]").forEach(a=>a.addEventListener("click",()=>{$("#f-msn").value=a.dataset.pick;buildLink();}));
+// a mission page links here as ?m=trex#book
+{const m=new URLSearchParams(location.search).get("m");if(m&&L.msn[m])$("#f-msn").value=m;}
+
+// One box, one game a day: warn when the chosen date is already booked.
+{const t=new Date(Date.now()+864e5).toISOString().slice(0,10);if(t>$("#f-date").min)$("#f-date").min=t;}
+let busy=[];
+const dateOk=()=>{const d=$("#f-date").value;return !d||d>=$("#f-date").min;};
+const checkDate=()=>{
+  $("#f-date").classList.toggle("bad",!dateOk());
+  if(!dateOk())return status(L.err_date,"err");
+  const taken=busy.includes($("#f-date").value)&&["trex","any"].includes($("#f-msn").value);
+  status(taken?L.date_busy:"",taken?"err":"");
+};
+$("#f-date").addEventListener("change",checkDate);
+$("#f-msn").addEventListener("change",()=>{if($("#f-date").value)checkDate();});
+fetch("/api/busy").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.dates){busy=j.dates;if($("#f-date").value)checkDate();}}).catch(()=>{});
 
 // Save the request on our side first, so it is not lost if the visitor never
 // presses "send" inside WhatsApp. The link itself still opens WhatsApp.
@@ -429,8 +451,9 @@ $("#f-phone").addEventListener("input",()=>$("#f-phone").classList.remove("bad")
 $("#send").addEventListener("click",e=>{
   const phone=$("#f-phone").value.trim(),digits=phone.replace(/\D/g,"");
   if(digits.length<9||digits.length>15){e.preventDefault();$("#f-phone").classList.add("bad");$("#f-phone").focus();status(L.err_phone,"err");return;}
+  if(!dateOk()){e.preventDefault();$("#f-date").focus();status(L.err_date,"err");return;}
   if(!$("#f-ok").checked){e.preventDefault();$("#f-ok").focus();status(L.err_consent,"err");return;}
-  const body=JSON.stringify({name:$("#f-name").value,phone,city:$("#f-city").value,kids:$("#f-kids").value,age:$("#f-age").value,mission:$("#f-msn").value,lang:document.documentElement.lang,consent:true,website:$("#f-web").value});
+  const body=JSON.stringify({name:$("#f-name").value,phone,city:$("#f-city").value,kids:$("#f-kids").value,age:$("#f-age").value,mission:$("#f-msn").value,date:$("#f-date").value,delivery:$("#f-dlv").value,lang:document.documentElement.lang,consent:true,website:$("#f-web").value});
   fetch("/api/lead",{method:"POST",headers:{"content-type":"application/json"},body,keepalive:true})
     .then(r=>r.ok?status(L.saved,"ok"):status(L.save_fail,"err"))
     .catch(()=>status(L.save_fail,"err"));

@@ -126,6 +126,7 @@ nav a:hover{color:#fff}
 .quest p{color:#c9d0cb}
 .specs{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .specs li{font-size:16px;padding:6px 12px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
+.specs li.price{font-weight:700;color:var(--volt);border-color:rgba(255,212,0,.45)}
 .quest .more{align-self:flex-start;margin-top:6px;font-weight:700;color:var(--volt);text-decoration:none;border-bottom:1.5px solid transparent}
 .quest .more:hover{border-bottom-color:var(--volt)}
 .note{color:#8d9791;font-size:16px;margin-top:18px}
@@ -254,7 +255,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
   <div class="wrap">
     <div class="facts">
       <div><b data-i18n="f1"></b><span data-i18n="f1d"></span></div>
-      <div><b>7–13</b><span data-i18n="f2d"></span></div>
+      <div><b dir="ltr">7–13</b><span data-i18n="f2d"></span></div>
       <div><b data-i18n="f3"></b><span data-i18n="f3d"></span></div>
     </div>
   </div>
@@ -272,8 +273,8 @@ footer span{direction:ltr;unicode-bidi:isolate}
         <div class="tags"><span class="status" data-i18n="st_dev"></span><span class="kind" data-i18n="k_box"></span></div>
         <h3 data-i18n="m1_t"></h3>
         <p data-i18n="m1_d"></p>
-        <ul class="specs"><li data-i18n="s_56"></li><li data-i18n="s_self"></li><li data-i18n="s_hints"></li></ul>
-        <a class="more" href="#book" data-pick="trex" data-i18n="more"></a>
+        <ul class="specs"><li class="price" data-i18n="s_price"></li><li data-i18n="s_56"></li><li data-i18n="s_self"></li><li data-i18n="s_hints"></li></ul>
+        <a class="more" href="{{home}}t-rex/" data-i18n="m1_more"></a>
       </div>
     </article>
 
@@ -355,6 +356,7 @@ footer span{direction:ltr;unicode-bidi:isolate}
       </div>
       <div class="faq rv">
         <details><summary data-i18n="q1"></summary><p data-i18n="a1"></p></details>
+        <details><summary data-i18n="q7"></summary><p data-i18n="a7"></p></details>
         <details><summary data-i18n="q2"></summary><p data-i18n="a2"></p></details>
         <details><summary data-i18n="q3"></summary><p data-i18n="a3"></p></details>
         <details><summary data-i18n="q4"></summary><p data-i18n="a4"></p></details>
@@ -374,6 +376,9 @@ footer span{direction:ltr;unicode-bidi:isolate}
       <form class="form" id="form" novalidate>
         <div class="field"><label for="f-name" data-i18n="f_name"></label><input id="f-name" autocomplete="name"></div>
         <div class="field"><label for="f-phone" data-i18n="f_phone"></label><input id="f-phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required></div>
+        <div class="field"><label for="f-date" data-i18n="f_date"></label><input id="f-date" type="date" min="{{date_min}}"></div>
+        <div class="field"><label for="f-dlv" data-i18n="f_dlv"></label>
+          <select id="f-dlv"><option value="pickup" data-i18n="o_pick"></option><option value="delivery" data-i18n="o_dlv"></option></select></div>
         <div class="field"><label for="f-city" data-i18n="f_city"></label><input id="f-city" autocomplete="address-level2"></div>
         <div class="field"><label for="f-kids" data-i18n="f_kids"></label><input id="f-kids" type="number" min="1" max="30" inputmode="numeric"></div>
         <div class="field"><label for="f-age" data-i18n="f_age"></label>
@@ -412,12 +417,29 @@ function buildLink(){
   lines.push(`${m[3]}: ${age}`);
   if(v("#f-city"))lines.push(`${m[4]}: ${v("#f-city")}`);
   if(v("#f-name"))lines.push(`${m[5]}: ${v("#f-name")}`);
+  if(v("#f-date"))lines.splice(2,0,`${m[6]}: ${v("#f-date").split("-").reverse().join(".")}`,`${m[7]}: ${L.dlv[$("#f-dlv").value]}`);
   $("#send").href=`https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join("\n"))}`;
 }
 $("#form").addEventListener("input",buildLink);
 $("#form").addEventListener("change",buildLink);
 $("#form").addEventListener("submit",e=>e.preventDefault());
 document.querySelectorAll("[data-pick]").forEach(a=>a.addEventListener("click",()=>{$("#f-msn").value=a.dataset.pick;buildLink();}));
+// a mission page links here as ?m=trex#book
+{const m=new URLSearchParams(location.search).get("m");if(m&&L.msn[m])$("#f-msn").value=m;}
+
+// One box, one game a day: warn when the chosen date is already booked.
+{const t=new Date(Date.now()+864e5).toISOString().slice(0,10);if(t>$("#f-date").min)$("#f-date").min=t;}
+let busy=[];
+const dateOk=()=>{const d=$("#f-date").value;return !d||d>=$("#f-date").min;};
+const checkDate=()=>{
+  $("#f-date").classList.toggle("bad",!dateOk());
+  if(!dateOk())return status(L.err_date,"err");
+  const taken=busy.includes($("#f-date").value)&&["trex","any"].includes($("#f-msn").value);
+  status(taken?L.date_busy:"",taken?"err":"");
+};
+$("#f-date").addEventListener("change",checkDate);
+$("#f-msn").addEventListener("change",()=>{if($("#f-date").value)checkDate();});
+fetch("/api/busy").then(r=>r.ok?r.json():null).then(j=>{if(j&&j.dates){busy=j.dates;if($("#f-date").value)checkDate();}}).catch(()=>{});
 
 // Save the request on our side first, so it is not lost if the visitor never
 // presses "send" inside WhatsApp. The link itself still opens WhatsApp.
@@ -426,8 +448,9 @@ $("#f-phone").addEventListener("input",()=>$("#f-phone").classList.remove("bad")
 $("#send").addEventListener("click",e=>{
   const phone=$("#f-phone").value.trim(),digits=phone.replace(/\D/g,"");
   if(digits.length<9||digits.length>15){e.preventDefault();$("#f-phone").classList.add("bad");$("#f-phone").focus();status(L.err_phone,"err");return;}
+  if(!dateOk()){e.preventDefault();$("#f-date").focus();status(L.err_date,"err");return;}
   if(!$("#f-ok").checked){e.preventDefault();$("#f-ok").focus();status(L.err_consent,"err");return;}
-  const body=JSON.stringify({name:$("#f-name").value,phone,city:$("#f-city").value,kids:$("#f-kids").value,age:$("#f-age").value,mission:$("#f-msn").value,lang:document.documentElement.lang,consent:true,website:$("#f-web").value});
+  const body=JSON.stringify({name:$("#f-name").value,phone,city:$("#f-city").value,kids:$("#f-kids").value,age:$("#f-age").value,mission:$("#f-msn").value,date:$("#f-date").value,delivery:$("#f-dlv").value,lang:document.documentElement.lang,consent:true,website:$("#f-web").value});
   fetch("/api/lead",{method:"POST",headers:{"content-type":"application/json"},body,keepalive:true})
     .then(r=>r.ok?status(L.saved,"ok"):status(L.save_fail,"err"))
     .catch(()=>status(L.save_fail,"err"));

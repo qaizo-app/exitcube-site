@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="{{lang}}" dir="{{dir}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{desc}}">
+<meta name="theme-color" content="#0a0c0b">
+<link rel="canonical" href="{{url}}">
+{{alternates}}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ExitCube">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{desc}}">
+<meta property="og:url" content="{{url}}">
+<meta property="og:image" content="https://exitcube.co.il/img/trex-m.jpg">
+<meta property="og:locale" content="{{locale}}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/{{font}}" crossorigin>
+<script type="application/ld+json">{{jsonld}}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0c0b'/%3E%3Crect x='8' y='8' width='16' height='16' fill='none' stroke='%23ffd400' stroke-width='3'/%3E%3Crect x='13.5' y='13.5' width='5' height='5' fill='%2335e85a'/%3E%3C/svg%3E">
+<style>
+{{css}}
+/* mission page */
+.back{font-size:17px;font-weight:500;color:#d5dbd6;text-decoration:none;margin-inline-start:auto}
+.back:hover{color:#fff}
+@media (max-width:900px){.lang{margin-inline-start:0}}
+@media (max-width:560px){.back{display:none}.lang{margin-inline-start:auto}}
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px}
+.feat h3{font-size:20px;margin-bottom:8px}
+.feat p{color:var(--dim);font-size:17px}
+.feat::before{content:"";display:block;width:26px;height:4px;border-radius:2px;background:var(--neon);margin-bottom:16px}
+@media (max-width:860px){.feats{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.feats{grid-template-columns:1fr}}
+.prices{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:860px}
+.plan{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:clamp(24px,3.4vw,36px);display:flex;flex-direction:column;gap:10px}
+.plan.alt{border-color:rgba(255,212,0,.5)}
+.plan h3{font-size:22px}
+.plan .sum{font-size:clamp(40px,5vw,54px);font-weight:800;line-height:1;color:var(--volt);font-variant-numeric:tabular-nums}
+.plan .sum small{font-size:17px;font-weight:500;color:var(--dim);margin-inline-start:8px}
+.plan p{color:#c9d0cb;font-size:17px}
+@media (max-width:640px){.prices{grid-template-columns:1fr}}
+.steps.four{grid-template-columns:repeat(4,1fr)}
+@media (max-width:900px){.steps.four{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps.four{grid-template-columns:1fr}}
+.cta-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:clamp(28px,5vw,56px);text-align:center;position:relative;overflow:hidden}
+.cta-box::before{content:"";position:absolute;inset:0 0 auto;height:6px;background:repeating-linear-gradient(-45deg,var(--volt) 0 14px,#16160f 14px 28px)}
+.cta-box h2{font-size:clamp(28px,4.2vw,44px);margin-bottom:12px}
+.cta-box p{color:var(--dim);margin-bottom:26px}
+.cta-box .phone{display:inline-block;margin-top:18px;font-size:22px}
+</style>
+<noscript><style>.rv{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap bar">
+    <a class="logo" href="{{home}}" aria-label="ExitCube">EXIT<b>CUBE</b></a>
+    <a class="back" href="{{home}}#quests" data-i18n="t_back"></a>
+    <label class="lang"><select id="lang" aria-label="Language"><option value="he">עברית</option><option value="ru">Русский</option><option value="en">English</option></select></label>
+    <a class="btn sm" href="{{book}}" data-i18n="nav_book"></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <picture>
+      <source media="(max-width:700px)" srcset="/img/trex-m.webp" width="960" height="536">
+      <img src="/img/trex.webp" alt="{{alt_hero}}" width="1920" height="1072" fetchpriority="high">
+    </picture>
+    <div class="shade"></div>
+    <div class="wrap">
+      <div class="inner">
+        <span class="pill"><i></i><span data-i18n="t_pill"></span></span>
+        <h1 data-i18n="t_h1"></h1>
+        <p class="sub" data-i18n="t_sub"></p>
+        <div class="ctas">
+          <a class="btn" href="{{book}}" data-i18n="t_cta"></a>
+          <a class="btn ghost" href="#prices" data-i18n="t_cta2"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="facts">
+      <div><b dir="ltr">7–12</b><span data-i18n="t_f1d"></span></div>
+      <div><b data-i18n="t_f2"></b><span data-i18n="t_f2d"></span></div>
+      <div><b data-i18n="t_f3"></b><span data-i18n="t_f3d"></span></div>
+    </div>
+  </div>
+
+  <section id="inside" class="sec wrap">
+    <div class="sec-head rv">
+      <span class="kicker" data-i18n="t_in_k"></span>
+      <h2 data-i18n="t_in_t"></h2>
+    </div>
+    <div class="feats rv">
+      <div class="feat"><h3 data-i18n="t_i1_t"></h3><p data-i18n="t_i1_d"></p></div>
+      <div class="feat"><h3 data-i18n="t_i2_t"></h3><p data-i18n="t_i2_d"></p></div>
+      <div class="feat"><h3 data-i18n="t_i3_t"></h3><p data-i18n="t_i3_d"></p></div>
+      <div class="feat"><h3 data-i18n="t_i4_t"></h3><p data-i18n="t_i4_d"></p></div>
+      <div class="feat"><h3 data-i18n="t_i5_t"></h3><p data-i18n="t_i5_d"></p></div>
+      <div class="feat"><h3 data-i18n="t_i6_t"></h3><p data-i18n="t_i6_d"></p></div>
+    </div>
+    <p class="note" data-i18n="t_note"></p>
+  </section>
+
+  <section id="prices" class="band">
+    <div class="sec wrap">
+      <div class="sec-head rv">
+        <span class="kicker" data-i18n="t_p_k"></span>
+        <h2 data-i18n="t_p_t"></h2>
+      </div>
+      <div class="prices rv">
+        <div class="plan"><h3 data-i18n="t_p1_t"></h3><div class="sum">{{trex_price}} ₪<small data-i18n="t_per"></small></div><p data-i18n="t_p1_d"></p></div>
+        <div class="plan alt"><h3 data-i18n="t_p2_t"></h3><div class="sum">{{full_price}} ₪<small data-i18n="t_per"></small></div><p data-i18n="t_p2_d"></p></div>
+      </div>
+      <p class="note" data-i18n="t_p_note"></p>
+    </div>
+  </section>
+
+  <section id="how" class="sec wrap">
+    <div class="sec-head rv">
+      <span class="kicker" data-i18n="t_h_k"></span>
+      <h2 data-i18n="t_h_t"></h2>
+    </div>
+    <div class="steps four rv">
+      <div class="step"><h3 data-i18n="t_s1_t"></h3><p data-i18n="t_s1_d"></p></div>
+      <div class="step"><h3 data-i18n="t_s2_t"></h3><p data-i18n="t_s2_d"></p></div>
+      <div class="step"><h3 data-i18n="t_s3_t"></h3><p data-i18n="t_s3_d"></p></div>
+      <div class="step"><h3 data-i18n="t_s4_t"></h3><p data-i18n="t_s4_d"></p></div>
+    </div>
+  </section>
+
+  <section id="faq" class="band">
+    <div class="sec wrap">
+      <div class="sec-head rv">
+        <span class="kicker" data-i18n="fq_k"></span>
+        <h2 data-i18n="t_fq_t"></h2>
+      </div>
+      <div class="faq rv">
+        <details><summary data-i18n="t_q1"></summary><p data-i18n="t_a1"></p></details>
+        <details><summary data-i18n="t_q2"></summary><p data-i18n="t_a2"></p></details>
+        <details><summary data-i18n="t_q3"></summary><p data-i18n="t_a3"></p></details>
+        <details><summary data-i18n="q4"></summary><p data-i18n="a4"></p></details>
+        <details><summary data-i18n="q6"></summary><p data-i18n="a6"></p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" style="padding-bottom:0">
+    <div class="cta-box rv">
+      <h2 data-i18n="t_book_t"></h2>
+      <p data-i18n="t_book_s"></p>
+      <a class="btn" href="{{book}}" data-i18n="t_cta"></a><br>
+      <a class="phone" href="tel:{{tel}}">{{phone}}</a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 ExitCube</span><nav class="flinks"><a href="{{home}}privacy/" data-i18n="ft_privacy"></a><a href="{{home}}accessibility/" data-i18n="ft_access"></a></nav></div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+$("#lang").addEventListener("change",e=>{location.href=({he:"/",ru:"/ru/",en:"/en/"})[e.target.value]+"t-rex/";});
+const hdr=$("#hdr");
+const onScroll=()=>hdr.classList.toggle("solid",scrollY>40);
+addEventListener("scroll",onScroll,{passive:true});onScroll();
+const rvs=document.querySelectorAll(".rv");
+if("IntersectionObserver" in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{rootMargin:"0px 0px -8% 0px"});
+  rvs.forEach(el=>io.observe(el));
+}else rvs.forEach(el=>el.classList.add("in"));
+</script>
+</body>
+</html>
