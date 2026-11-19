@@ -1,5 +1,6 @@
-// ExitCube backend: stores waitlist requests from the site form in D1 and
-// notifies the owner in Telegram. Everything else is served as static assets.
+// ExitCube backend: stores booking requests from the site form in D1 and
+// notifies the owner in Telegram. GET /api/busy lists dates already booked
+// (requests with status "booked"), so the form can warn about them. Everything else is served as static assets.
 //
 // Bindings (wrangler.jsonc):  DB (D1), ASSETS (static files)
 // Secrets (Cloudflare dashboard):  TELEGRAM_BOT_TOKEN
@@ -11,6 +12,9 @@
 const SITE_HOSTS = new Set(["exitcube.co.il", "www.exitcube.co.il"]);
 const MISSIONS = { any: "Любая", trex: "Операция Т-Рекс", space: "Космические агенты (6 кубов)", magic: "Волшебные миссии" };
 const LANGS = { he: "иврит", ru: "русский", en: "английский" };
+const DELIVERY = { pickup: "самовывоз", delivery: "доставка и возврат" };
+// Missions that use the single T-Rex box: one booking per date.
+const ONE_BOX = ["trex", "any"];
 const DEDUP_MINUTES = 10; // same phone again within this window updates the earlier request
 const HOURLY_CAP = 60; // crude flood guard for the whole site
 
@@ -24,6 +28,7 @@ export default {
 	async fetch(request, env, ctx) {
 		const url = new URL(request.url);
 		if (url.pathname === "/api/lead") return handleLead(request, env, ctx);
+		if (url.pathname === "/api/busy") return handleBusy(env);
 		if (url.pathname.startsWith("/api/admin/")) return handleAdmin(request, env, url.pathname.slice(11));
 		if (url.pathname.startsWith("/api/")) return json({ ok: false, error: "not_found" }, 404);
 		return env.ASSETS.fetch(request);
@@ -48,6 +53,14 @@ async function ensureSchema(db) {
 		db.prepare(`CREATE INDEX IF NOT EXISTS leads_phone ON leads(phone)`),
 		db.prepare(`CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)`),
 	]);
+	// Columns added after launch; ALTER fails harmlessly once they exist.
+	for (const col of ["event_date TEXT", "delivery TEXT"]) {
+		try {
+			await db.prepare(`ALTER TABLE leads ADD COLUMN ${col}`).run();
+		} catch (e) {
+			if (!/duplicate column/i.test(String(e?.message || e))) throw e;
+		}
+	}
 	schemaReady = true;
 }
 
@@ -68,6 +81,32 @@ const clean = (v, max) =>
 		.replace(/[\u0000-\u001f\u007f]/g, " ")
 		.trim()
 		.slice(0, max);
+
+const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jerusalem" }); // YYYY-MM-DD
+
+// A party date: YYYY-MM-DD, from today up to a year and a half ahead; anything else is dropped.
+function eventDate(v) {
+	const d = clean(v, 10);
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || Number.isNaN(Date.parse(d + "T00:00:00Z"))) return null;
+	const max = new Date(Date.now() + 548 * 86_400_000).toISOString().slice(0, 10);
+	return d >= today() && d <= max ? d : null;
+}
+const ruDate = (d) => (d ? d.split("-").reverse().join(".") : "—");
+
+async function bookedDates(db) {
+	const rows = await db
+		.prepare(`SELECT DISTINCT event_date FROM leads WHERE status = 'booked' AND event_date >= ? AND mission IN ('trex', 'any') ORDER BY event_date`)
+		.bind(today())
+		.all();
+	return (rows.results || []).map((r) => r.event_date);
+}
+
+async function handleBusy(env) {
+	await ensureSchema(env.DB);
+	const res = json({ ok: true, dates: await bookedDates(env.DB) });
+	res.headers.set("cache-control", "public, max-age=60");
+	return res;
+}
 
 async function handleLead(request, env, ctx) {
 	if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
@@ -100,6 +139,8 @@ async function handleLead(request, env, ctx) {
 		age: clean(data.age, 20),
 		mission: Object.hasOwn(MISSIONS, data.mission) ? data.mission : "any",
 		lang: Object.hasOwn(LANGS, data.lang) ? data.lang : "he",
+		event_date: eventDate(data.date),
+		delivery: Object.hasOwn(DELIVERY, data.delivery) ? data.delivery : null,
 	};
 
 	const db = env.DB;
@@ -119,18 +160,18 @@ async function handleLead(request, env, ctx) {
 
 	if (dup) {
 		await db
-			.prepare(`UPDATE leads SET name = ?, city = ?, kids = ?, age = ?, mission = ?, lang = ? WHERE id = ?`)
-			.bind(lead.name, lead.city, lead.kids, lead.age, lead.mission, lead.lang, dup.id)
+			.prepare(`UPDATE leads SET name = ?, city = ?, kids = ?, age = ?, mission = ?, lang = ?, event_date = ?, delivery = ? WHERE id = ?`)
+			.bind(lead.name, lead.city, lead.kids, lead.age, lead.mission, lead.lang, lead.event_date, lead.delivery, dup.id)
 			.run();
 		return json({ ok: true });
 	}
 
 	const res = await db
 		.prepare(
-			`INSERT INTO leads (created_at, name, phone, city, kids, age, mission, lang, consent)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+			`INSERT INTO leads (created_at, name, phone, city, kids, age, mission, lang, event_date, delivery, consent)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
 		)
-		.bind(nowIso, lead.name, lead.phone, lead.city, lead.kids, lead.age, lead.mission, lead.lang)
+		.bind(nowIso, lead.name, lead.phone, lead.city, lead.kids, lead.age, lead.mission, lead.lang, lead.event_date, lead.delivery)
 		.run();
 
 	ctx.waitUntil(notifyTelegram(env, db, lead, res.meta?.last_row_id).catch((e) => console.error("telegram", e)));
@@ -168,8 +209,11 @@ async function notifyTelegram(env, db, lead, id) {
 	const chat = await telegramChatId(env, db, token);
 	if (!chat) return;
 
+	const taken = lead.event_date && ONE_BOX.includes(lead.mission) && (await bookedDates(db)).includes(lead.event_date);
 	const lines = [
 		`🟢 Новая заявка ExitCube${id ? " №" + id : ""}`,
+		`Дата: ${ruDate(lead.event_date)}${taken ? " ⚠️ уже есть бронь на эту дату" : ""}`,
+		`Получение: ${DELIVERY[lead.delivery] || "—"}`,
 		`Имя: ${lead.name || "—"}`,
 		`Телефон: ${lead.phone}`,
 		`Город: ${lead.city || "—"}`,
@@ -333,9 +377,15 @@ async function handleAdmin(request, env, action) {
 
 	if (action === "leads" && request.method === "GET") {
 		const rows = await db
-			.prepare(`SELECT id, created_at, name, phone, city, kids, age, mission, lang, status, note FROM leads ORDER BY id DESC LIMIT 1000`)
+			.prepare(`SELECT id, created_at, name, phone, city, kids, age, mission, lang, event_date, delivery, status, note FROM leads ORDER BY id DESC LIMIT 1000`)
 			.all();
-		const leads = (rows.results || []).map((l) => ({ ...l, wa: waNumber(l.phone), mission_name: MISSIONS[l.mission] || l.mission, lang_name: LANGS[l.lang] || l.lang }));
+		const leads = (rows.results || []).map((l) => ({
+			...l,
+			wa: waNumber(l.phone),
+			mission_name: MISSIONS[l.mission] || l.mission,
+			lang_name: LANGS[l.lang] || l.lang,
+			delivery_name: DELIVERY[l.delivery] || "",
+		}));
 		return json({ ok: true, leads });
 	}
 
@@ -348,6 +398,12 @@ async function handleAdmin(request, env, action) {
 			await db.prepare(`UPDATE leads SET status = ? WHERE id = ?`).bind(data.status, id).run();
 		}
 		if (data.note !== undefined) await db.prepare(`UPDATE leads SET note = ? WHERE id = ?`).bind(clean(data.note, 500), id).run();
+		if (data.event_date !== undefined) {
+			// The owner may set any date here, past ones too (e.g. a game agreed by phone).
+			const d = clean(data.event_date, 10);
+			if (d && !/^\d{4}-\d{2}-\d{2}$/.test(d)) return json({ ok: false, error: "date" }, 400);
+			await db.prepare(`UPDATE leads SET event_date = ? WHERE id = ?`).bind(d || null, id).run();
+		}
 		return json({ ok: true });
 	}
 
