@@ -215,7 +215,9 @@ def main():
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     sm += [f"  <url><loc>{u}</loc></url>" for u in urls] + ["</urlset>", ""]
     write("sitemap.xml", "\n".join(sm))
-    write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n")
+    write("robots.txt", f"User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: {BASE}/sitemap.xml\n")
+    # Owner's panel: a single static page, all data comes from /api/admin after sign-in.
+    write("admin/index.html", (ROOT / "src" / "admin.html").read_text(encoding="utf-8"))
     print(f"built {len(urls)} pages")
 
 

@@ -3,6 +3,8 @@
 //
 // Bindings (wrangler.jsonc):  DB (D1), ASSETS (static files)
 // Secrets (Cloudflare dashboard):  TELEGRAM_BOT_TOKEN
+// Admin panel (/admin): sign-in by a one-time code the bot sends to the owner's
+// Telegram chat; no password or extra secret to configure.
 // Optional variable:  TELEGRAM_CHAT_ID — if absent, the chat that first sent
 // /start to the bot is used and remembered.
 
@@ -22,6 +24,7 @@ export default {
 	async fetch(request, env, ctx) {
 		const url = new URL(request.url);
 		if (url.pathname === "/api/lead") return handleLead(request, env, ctx);
+		if (url.pathname.startsWith("/api/admin/")) return handleAdmin(request, env, url.pathname.slice(11));
 		if (url.pathname.startsWith("/api/")) return json({ ok: false, error: "not_found" }, 404);
 		return env.ASSETS.fetch(request);
 	},
@@ -217,4 +220,144 @@ function botToken(env) {
 		if (typeof env[key] === "string" && env[key].trim().length > 20) return env[key].trim().replace(/^["'\s]+|["'\s.,;]+$/g, "");
 	}
 	return "";
+}
+
+// ---------------------------------------------------------------------------
+// Admin panel API. Only the owner can sign in: the code goes to the Telegram
+// chat that receives the requests.
+const STATUSES = ["new", "contacted", "waiting", "booked", "closed"];
+const CODE_TTL_MS = 5 * 60_000;
+const CODE_RESEND_MS = 60_000;
+const CODE_MAX_TRIES = 5;
+const SESSION_DAYS = 30;
+const COOKIE = "xc_admin";
+
+const getSetting = async (db, key) => (await db.prepare(`SELECT value FROM settings WHERE key = ?`).bind(key).first())?.value ?? null;
+const setSetting = (db, key, value) => db.prepare(`INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)`).bind(key, value).run();
+const delSetting = (db, key) => db.prepare(`DELETE FROM settings WHERE key = ?`).bind(key).run();
+const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+async function adminKey(db) {
+	let key = await getSetting(db, "admin_key");
+	if (!key) {
+		key = hex(crypto.getRandomValues(new Uint8Array(32)));
+		await setSetting(db, "admin_key", key);
+	}
+	return key;
+}
+
+async function sign(keyHex, message) {
+	const raw = new Uint8Array(keyHex.match(/../g).map((h) => Number.parseInt(h, 16)));
+	const key = await crypto.subtle.importKey("raw", raw, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+	return hex(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message)));
+}
+
+function sameText(a, b) {
+	if (a.length !== b.length) return false;
+	let diff = 0;
+	for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+	return diff === 0;
+}
+
+async function signedIn(request, db) {
+	const m = (request.headers.get("cookie") || "").match(new RegExp(`(?:^|;\\s*)${COOKIE}=(\\d+)\\.([0-9a-f]{64})`));
+	if (!m) return false;
+	if (Number(m[1]) < Date.now()) return false;
+	return sameText(m[2], await sign(await adminKey(db), "session:" + m[1]));
+}
+
+const cookieHeader = (value, maxAge) => `${COOKIE}=${value}; Path=/api/admin; Max-Age=${maxAge}; HttpOnly; Secure; SameSite=Strict`;
+
+async function readJson(request) {
+	const raw = await request.text();
+	if (raw.length > 4000) return null;
+	try {
+		const data = JSON.parse(raw || "{}");
+		return data && typeof data === "object" ? data : null;
+	} catch {
+		return null;
+	}
+}
+
+async function handleAdmin(request, env, action) {
+	const db = env.DB;
+	await ensureSchema(db);
+	const post = request.method === "POST";
+	if (post && !allowedOrigin(request)) return json({ ok: false, error: "origin" }, 403);
+
+	if (action === "code" && post) {
+		const token = botToken(env);
+		const chat = token ? await telegramChatId(env, db, token) : null;
+		if (!chat) return json({ ok: false, error: "no_telegram" }, 503);
+		const prev = JSON.parse((await getSetting(db, "admin_code")) || "null");
+		if (prev && Date.now() - prev.sent < CODE_RESEND_MS) return json({ ok: false, error: "wait" }, 429);
+		const code = String(crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000).padStart(6, "0");
+		const now = Date.now();
+		await setSetting(db, "admin_code", JSON.stringify({ h: await sign(await adminKey(db), "code:" + code), exp: now + CODE_TTL_MS, sent: now, tries: 0 }));
+		const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({ chat_id: chat, text: `🔑 Код входа в админку ExitCube: ${code}\nДействует 5 минут. Если это не ты — просто не вводи его.` }),
+		});
+		if (!r.ok) return json({ ok: false, error: "no_telegram" }, 503);
+		return json({ ok: true });
+	}
+
+	if (action === "login" && post) {
+		const data = await readJson(request);
+		const code = clean(data?.code, 12).replace(/\D/g, "");
+		const saved = JSON.parse((await getSetting(db, "admin_code")) || "null");
+		if (!saved || saved.exp < Date.now()) return json({ ok: false, error: "expired" }, 400);
+		if (saved.tries >= CODE_MAX_TRIES) {
+			await delSetting(db, "admin_code");
+			return json({ ok: false, error: "expired" }, 400);
+		}
+		if (code.length !== 6 || !sameText(saved.h, await sign(await adminKey(db), "code:" + code))) {
+			await setSetting(db, "admin_code", JSON.stringify({ ...saved, tries: saved.tries + 1 }));
+			return json({ ok: false, error: "wrong", left: CODE_MAX_TRIES - saved.tries - 1 }, 400);
+		}
+		await delSetting(db, "admin_code");
+		const exp = Date.now() + SESSION_DAYS * 86_400_000;
+		const res = json({ ok: true });
+		res.headers.set("set-cookie", cookieHeader(`${exp}.${await sign(await adminKey(db), "session:" + exp)}`, SESSION_DAYS * 86_400));
+		return res;
+	}
+
+	if (action === "logout" && post) {
+		const res = json({ ok: true });
+		res.headers.set("set-cookie", cookieHeader("", 0));
+		return res;
+	}
+
+	if (!(await signedIn(request, db))) return json({ ok: false, error: "auth" }, 401);
+
+	if (action === "leads" && request.method === "GET") {
+		const rows = await db
+			.prepare(`SELECT id, created_at, name, phone, city, kids, age, mission, lang, status, note FROM leads ORDER BY id DESC LIMIT 1000`)
+			.all();
+		const leads = (rows.results || []).map((l) => ({ ...l, wa: waNumber(l.phone), mission_name: MISSIONS[l.mission] || l.mission, lang_name: LANGS[l.lang] || l.lang }));
+		return json({ ok: true, leads });
+	}
+
+	if (action === "update" && post) {
+		const data = await readJson(request);
+		const id = Number.parseInt(data?.id, 10);
+		if (!Number.isInteger(id)) return json({ ok: false, error: "id" }, 400);
+		if (data.status !== undefined) {
+			if (!STATUSES.includes(data.status)) return json({ ok: false, error: "status" }, 400);
+			await db.prepare(`UPDATE leads SET status = ? WHERE id = ?`).bind(data.status, id).run();
+		}
+		if (data.note !== undefined) await db.prepare(`UPDATE leads SET note = ? WHERE id = ?`).bind(clean(data.note, 500), id).run();
+		return json({ ok: true });
+	}
+
+	if (action === "delete" && post) {
+		const data = await readJson(request);
+		const id = Number.parseInt(data?.id, 10);
+		if (!Number.isInteger(id)) return json({ ok: false, error: "id" }, 400);
+		await db.prepare(`DELETE FROM leads WHERE id = ?`).bind(id).run();
+		return json({ ok: true });
+	}
+
+	return json({ ok: false, error: "not_found" }, 404);
 }
